@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Яна Носкова](https://up.htmlacademy.ru/javascript/13/user/690905).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Карякин](https://up.htmlacademy.ru/javascript/13/user/133011).
 
 ---
 
