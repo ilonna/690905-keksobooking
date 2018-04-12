@@ -12,6 +12,17 @@ var OFFER_CHECKOUT = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wi-fi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
+var WRAPPER = document.querySelector('.map');
+var CARDS_TEMPLATE = document.querySelector('template').content.querySelector('.map__card');
+var CARD_ELEMENT = CARDS_TEMPLATE.cloneNode(true);
+var WRAP_PINS = WRAPPER.querySelector('.map__pins');
+var PINS_TEMPLATE = document.querySelector('template').content.querySelector('.map__pin');
+var WRAP_FEATURES = CARD_ELEMENT.querySelector('.popup__features');
+var FEATURES_ELEMENTS = WRAP_FEATURES.querySelectorAll('li');
+
+
+
 var USERS = [];
 var offerTypes = {
   palace: 'Дворец',
@@ -100,13 +111,12 @@ var createUser = function (title, type, checkin, checkout, features, photos, ava
 };
 
 var createPin = function (user) {
-  var listPins = templateNode('.map__pins');
-  var pinElement = cloneNode('template', '.map__pin');
+  var pinElement = PINS_TEMPLATE.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
   pinElement.setAttribute('style', 'left:' + user.location.x + 'px; top: ' + user.location.y + 'px;');
   pinElementImg.src = user.author.avatar;
   pinElementImg.alt = user.offer.title;
-  listPins.appendChild(pinElement);
+  WRAP_PINS.appendChild(pinElement);
 };
 
 
@@ -134,36 +144,20 @@ var createCards = function (count) {
   }
 };
 
-var templateNode = function (selector) {
-  return document.querySelector(selector);
-};
-var cloneNode = function (template, templateSelector) {
-  return document.querySelector(template).content.querySelector(templateSelector).cloneNode(true);
-};
+var generateCard = function (user) {
+  getFeatures(user.offer.features, FEATURES_ELEMENTS);
+  CARD_ELEMENT.querySelector('.popup__title').textContent = user.offer.title;
+  CARD_ELEMENT.querySelector('.popup__text--address').textContent = user.offer.address;
+  CARD_ELEMENT.querySelector('.popup__text--price').textContent = user.offer.price + '₽/ночь';
+  CARD_ELEMENT.querySelector('.popup__type').textContent = offerTypes[user.offer.type];
+  CARD_ELEMENT.querySelector('.popup__text--capacity').textContent = user.offer.rooms + ' комнаты для ' + user.offer.guests + ' гостей';
+  CARD_ELEMENT.querySelector('.popup__text--time').textContent = 'Заезд после ' + user.offer.checkin + ', выезд до ' + user.offer.checkout;
+  CARD_ELEMENT.querySelector('.popup__description').textContent = user.offer.description;
+  CARD_ELEMENT.querySelector('.popup__photos').src = user.offer.photos;
+  CARD_ELEMENT.querySelector('.popup__avatar').src = user.author.avatar;
 
-
+  WRAPPER.insertBefore(CARD_ELEMENT, WRAPPER.lastElementChild);
+};
 
 createCards(USERS_COUNT);
-
-var listCards = templateNode('.map');
-var cardElement = cloneNode('template', '.map__card');
-
-var featuresListTemplate = cardElement.querySelector('.popup__features');
-var featuresList = featuresListTemplate.querySelectorAll('li');
-getFeatures(USERS[0].offer.features, featuresList);
-
-cardElement.querySelector('.popup__title').textContent = USERS[0].offer.title;
-cardElement.querySelector('.popup__text--address').textContent = USERS[0].offer.address;
-cardElement.querySelector('.popup__text--price').textContent = USERS[0].offer.price + '₽/ночь';
-cardElement.querySelector('.popup__type').textContent = offerTypes[USERS[0].offer.type];
-cardElement.querySelector('.popup__text--capacity').textContent = USERS[0].offer.rooms + ' комнаты для ' + USERS[0].offer.guests + ' гостей';
-cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + USERS[0].offer.checkin + ', выезд до ' + USERS[0].offer.checkout;
-cardElement.querySelector('.popup__description').textContent = USERS[0].offer.description;
-cardElement.querySelector('.popup__photos').src = USERS[0].offer.photos;
-cardElement.querySelector('.popup__avatar').src = USERS[0].author.avatar;
-
-listCards.insertBefore(cardElement, listCards.lastChild);
-
-
-console.log(USERS);
-console.log(USERS[0].offer.features);
+generateCard(USERS[0]);
