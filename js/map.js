@@ -1,6 +1,6 @@
 'use strict';
 
-var USERS_COUNT = 8;
+var OFFERS_COUNT = 8;
 var PIN_WIDTH = 50;
 var PIN_HEIGTH = 70;
 var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
@@ -13,17 +13,20 @@ var OFFER_FEATURES = ['wi-fi', 'dishwasher', 'parking', 'washer', 'elevator', 'c
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-var WRAPPER = document.querySelector('.map');
+var CONTAINER = document.querySelector('.map');
 var CARDS_TEMPLATE = document.querySelector('template').content.querySelector('.map__card');
 var CARD_ELEMENT = CARDS_TEMPLATE.cloneNode(true);
-var WRAP_PINS = WRAPPER.querySelector('.map__pins');
-var PINS_TEMPLATE = document.querySelector('template').content.querySelector('.map__pin');
-var WRAP_FEATURES = CARD_ELEMENT.querySelector('.popup__features');
-var FEATURES_ELEMENTS = WRAP_FEATURES.querySelectorAll('li');
+var PINS_CONTAINER = CONTAINER.querySelector('.map__pins');
+var PIN_TEMPLATE = document.querySelector('template').content.querySelector('.map__pin');
+var FEATURES_CONTAINER = CARD_ELEMENT.querySelector('.popup__features');
+var FEATURES_ELEMENTS = FEATURES_CONTAINER.querySelectorAll('li');
+var FEATURES_PHOTO_CONTAINER = CARD_ELEMENT.querySelector('.popup__photos');
+var PHOTO_OFFER_TEMPLATE = FEATURES_PHOTO_CONTAINER.querySelector('img');
+FEATURES_PHOTO_CONTAINER.removeChild(PHOTO_OFFER_TEMPLATE);
 
 
 
-var USERS = [];
+var OFFERS = [];
 var offerTypes = {
   palace: 'Дворец',
   flat: 'Квартира',
@@ -49,8 +52,7 @@ var elementGetter = function (array, randomLength) {
     var index = getRandomIndex(data);
     if (randomLength) {
       return data.slice(1, index);
-    }
-    else {
+    } else {
       return data.splice(index, 1).pop();
     }
   };
@@ -79,7 +81,7 @@ var getFeatures = function (array, list) {
   }
 };
 
-var createUser = function (title, type, checkin, checkout, features, photos, avatar) {
+var createOffer = function (title, type, checkin, checkout, features, photos, avatar) {
   var randomOfferPrice = getRandomNumber(1000, 1000000);
   var randomOfferRooms = getRandomNumber(1, 5);
   var randomOfferGuests = getRandomNumber(1, 10);
@@ -111,12 +113,12 @@ var createUser = function (title, type, checkin, checkout, features, photos, ava
 };
 
 var createPin = function (user) {
-  var pinElement = PINS_TEMPLATE.cloneNode(true);
+  var pinElement = PIN_TEMPLATE.cloneNode(true);
   var pinElementImg = pinElement.querySelector('img');
   pinElement.setAttribute('style', 'left:' + user.location.x + 'px; top: ' + user.location.y + 'px;');
   pinElementImg.src = user.author.avatar;
   pinElementImg.alt = user.offer.title;
-  WRAP_PINS.appendChild(pinElement);
+  PINS_CONTAINER.appendChild(pinElement);
 };
 
 
@@ -126,38 +128,47 @@ var createCards = function (count) {
   var getRandomCheckin = elementGetter(OFFER_CHECKIN);
   var getRandomCheckout = elementGetter(OFFER_CHECKOUT);
   var getRandomFeatures = elementGetter(OFFER_FEATURES, true);
-  var getRandomPhotos = elementGetter(OFFER_PHOTOS);
   var getRandomAvatar = elementGetter(createArray(1, 8));
 
   for (var i = 0; i < count; i++) {
-    var user = createUser(
-      getRandomTitle(),
-      getRandomType(),
-      getRandomCheckin(),
-      getRandomCheckout(),
-      getRandomFeatures(),
-      getRandomPhotos(),
-      getRandomAvatar()
+    var offer = createOffer(
+        getRandomTitle(),
+        getRandomType(),
+        getRandomCheckin(),
+        getRandomCheckout(),
+        getRandomFeatures(),
+        OFFER_PHOTOS,
+        getRandomAvatar()
     );
-    createPin(user);
-    USERS.push(user);
+    createPin(offer);
+    OFFERS.push(offer);
   }
 };
 
-var generateCard = function (user) {
-  getFeatures(user.offer.features, FEATURES_ELEMENTS);
-  CARD_ELEMENT.querySelector('.popup__title').textContent = user.offer.title;
-  CARD_ELEMENT.querySelector('.popup__text--address').textContent = user.offer.address;
-  CARD_ELEMENT.querySelector('.popup__text--price').textContent = user.offer.price + '₽/ночь';
-  CARD_ELEMENT.querySelector('.popup__type').textContent = offerTypes[user.offer.type];
-  CARD_ELEMENT.querySelector('.popup__text--capacity').textContent = user.offer.rooms + ' комнаты для ' + user.offer.guests + ' гостей';
-  CARD_ELEMENT.querySelector('.popup__text--time').textContent = 'Заезд после ' + user.offer.checkin + ', выезд до ' + user.offer.checkout;
-  CARD_ELEMENT.querySelector('.popup__description').textContent = user.offer.description;
-  CARD_ELEMENT.querySelector('.popup__photos').src = user.offer.photos;
-  CARD_ELEMENT.querySelector('.popup__avatar').src = user.author.avatar;
 
-  WRAPPER.insertBefore(CARD_ELEMENT, WRAPPER.lastElementChild);
+var generatePhotoOffers = function (id) {
+  for (var k = 0; k < OFFERS[id].offer.photos.length; k++) {
+    var imgElement = PHOTO_OFFER_TEMPLATE.cloneNode(true);
+    imgElement.src = OFFERS[id].offer.photos[k];
+    FEATURES_PHOTO_CONTAINER.appendChild(imgElement);
+  }
 };
 
-createCards(USERS_COUNT);
-generateCard(USERS[0]);
+var generateOffers = function (id) {
+  getFeatures(OFFERS[id].offer.features, FEATURES_ELEMENTS);
+  CARD_ELEMENT.querySelector('.popup__title').textContent = OFFERS[id].offer.title;
+  CARD_ELEMENT.querySelector('.popup__text--address').textContent = OFFERS[id].offer.address;
+  CARD_ELEMENT.querySelector('.popup__text--price').textContent = OFFERS[id].offer.price + '₽/ночь';
+  CARD_ELEMENT.querySelector('.popup__type').textContent = offerTypes[OFFERS[id].offer.type];
+  CARD_ELEMENT.querySelector('.popup__text--capacity').textContent = OFFERS[id].offer.rooms + ' комнаты для ' + OFFERS[id].offer.guests + ' гостей';
+  CARD_ELEMENT.querySelector('.popup__text--time').textContent = 'Заезд после ' + OFFERS[id].offer.checkin + ', выезд до ' + OFFERS[id].offer.checkout;
+  CARD_ELEMENT.querySelector('.popup__description').textContent = OFFERS[id].offer.description;
+  CARD_ELEMENT.querySelector('.popup__avatar').src = OFFERS[id].author.avatar;
+
+  generatePhotoOffers(id);
+
+  CONTAINER.insertBefore(CARD_ELEMENT, CONTAINER.lastElementChild);
+};
+
+createCards(OFFERS_COUNT);
+generateOffers(0);
