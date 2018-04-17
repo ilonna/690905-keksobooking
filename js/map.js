@@ -171,6 +171,7 @@ var generateOffers = function (offer) {
 /* ------- EVENT   module4-task1 ------------------------*/
 
 var PIN_MAIN_ELEMENT = PINS_CONTAINER.querySelector('.map__pin--main');
+var PIN_IMG_ELEMENT = PIN_MAIN_ELEMENT.querySelector('img');
 var FORM_CONTAINER = document.querySelector('.ad-form');
 var FIELDSET_ELEMENT = FORM_CONTAINER.querySelectorAll('fieldset');
 var ADDRESS_FIELD = FORM_CONTAINER.querySelector('#address');
@@ -195,8 +196,9 @@ var pageActivation = function () {
   removeClass(CONTAINER, 'map--faded');
   removeClass(FORM_CONTAINER, 'ad-form--disabled');
   enabledFormElements(FIELDSET_ELEMENT);
+
   createCards(OFFERS_COUNT);
-  fillAdressField();
+  setCoordDotMap(parseInt(getComputedStyle(PIN_MAIN_ELEMENT).left, 10), parseInt(getComputedStyle(PIN_MAIN_ELEMENT).top, 10));
 
   PIN_MAIN_ELEMENT.removeEventListener('mouseup', pageActivation);
 };
@@ -210,13 +212,161 @@ POPUP_CLOSE.addEventListener('click', function () {
 });
 
 
-var fillAdressField = function () {
-  var pinH = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).height, 10) / 2;
-  var pinW = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).width, 10) / 2;
-  var pinL = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).left, 10);
-  var pinT = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).top, 10);
-  var posL = Math.round(pinL + pinW);
-  var posT = Math.round(pinT + pinH);
-  var fillAdress = posL + ', ' + posT;
-  ADDRESS_FIELD.setAttribute('value', fillAdress);
+
+
+/* ------- module4-task2 ------------------------*/
+
+var FORM_SUBMIT = FORM_CONTAINER.querySelector('.ad-form__submit');
+var SELECT_TYPE = FORM_CONTAINER.querySelector("#type");
+var INPUT_PRICE = FORM_CONTAINER.querySelector("#price");
+
+var select_timein = FORM_CONTAINER.querySelector("#timein");
+var select_timeout = FORM_CONTAINER.querySelector("#timeout");
+
+
+var changeTime = function () {
+  var select = this.selectedIndex;
+  if (this === select_timein) {
+    select_timeout.options[select].selected=true;
+  } else {
+    select_timein.options[select].selected=true;
+  }
+};
+
+
+select_timein.addEventListener("change", changeTime);
+select_timeout.addEventListener("change", changeTime);
+
+
+
+
+var calculateMinSumm = function () {
+
+  var selectType = this.options[this.selectedIndex].getAttribute('value');
+  var inputVal = INPUT_PRICE.value;
+  switch (selectType) {
+    case 'flat':
+      INPUT_PRICE.setAttribute('min', '1000');
+      INPUT_PRICE.setAttribute('placeholder', '1000');
+      if (inputVal < 1000) {
+        INPUT_PRICE.setAttribute('value', '1000');
+      }
+      break;
+    case 'bungalo':
+        INPUT_PRICE.setAttribute('min', '0');
+        INPUT_PRICE.setAttribute('placeholder', '0');
+      break;
+    case 'house':
+      INPUT_PRICE.setAttribute('min', '5000');
+      INPUT_PRICE.setAttribute('placeholder', '5000');
+      if (inputVal < 5000) {
+        INPUT_PRICE.setAttribute('value', '5000');
+      }
+      break;
+    case 'palace':
+      INPUT_PRICE.setAttribute('min', '10000');
+      INPUT_PRICE.setAttribute('placeholder', '10000');
+      if (inputVal < 10000) {
+        INPUT_PRICE.setAttribute('min', '10000');
+      }
+      break;
+  }
+
+};
+
+
+SELECT_TYPE.addEventListener("change", calculateMinSumm);
+
+
+/* ------- drag&drop -----------------------*/
+
+  PIN_MAIN_ELEMENT.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var limitCoords = {
+      top: PINS_CONTAINER.offsetTop,
+      right: PINS_CONTAINER.offsetWidth - PIN_MAIN_ELEMENT.offsetWidth,
+      bottom: PINS_CONTAINER.offsetHeight -  PIN_IMG_ELEMENT.offsetHeight - parseInt(getComputedStyle(PIN_MAIN_ELEMENT, '::after').height, 10),
+      left: PINS_CONTAINER.offsetLeft
+    };
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var top = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).top, 10);
+      var left = parseInt(getComputedStyle(PIN_MAIN_ELEMENT).left, 10);
+
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var endCoords = {
+        x: PIN_MAIN_ELEMENT.offsetLeft - shift.x,
+        y: PIN_MAIN_ELEMENT.offsetTop - shift.y
+      };
+
+      if (left > limitCoords.right) {
+        endCoords.x = limitCoords.right;
+      }
+      if (left < limitCoords.left) {
+        endCoords.x = limitCoords.left;
+      }
+      if (top > limitCoords.bottom) {
+        endCoords.y = limitCoords.bottom;
+      }
+      if (top < limitCoords.top) {
+        endCoords.y = limitCoords.top;
+      }
+
+      PIN_MAIN_ELEMENT.style.left = endCoords.x + 'px';
+      PIN_MAIN_ELEMENT.style.top = endCoords.y + 'px';
+
+
+      setCoordDotMap(endCoords.x, endCoords.y);
+      PINS_CONTAINER.addEventListener('mouseleave', onMouseLeave);
+
+
+      var onMouseLeave = function (leaveEvt) {
+        onMouseUp(leaveEvt);
+        var leaveCoords = {
+          x: leaveEvt.clientX,
+          y: leaveEvt.clientY
+        };
+        PIN_MAIN_ELEMENT.style.left = leaveCoords.x + 'px';
+        PIN_MAIN_ELEMENT.style.top = leaveCoords.y + 'px';
+        PINS_CONTAINER.removeEventListener('mouseleave', onMouseLeave);
+      };
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+
+
+var setCoordDotMap = function (endX, endY) {
+  var dot = {
+    top: endY + (PIN_IMG_ELEMENT.offsetHeight + parseInt(getComputedStyle(PIN_MAIN_ELEMENT, '::after').height, 10)),
+    left: endX + Math.round(parseInt(getComputedStyle(PIN_MAIN_ELEMENT).width, 10) / 2)
+  };
+  ADDRESS_FIELD.setAttribute('value', dot.left + ', ' + dot.top);
 };
