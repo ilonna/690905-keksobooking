@@ -95,10 +95,10 @@
           <legend class="ad-form-header__title">Ваша фотография (для карты)</legend>
           <div class="ad-form-header__upload">
             <div class="ad-form-header__preview">
-              <img src="img/muffin-grey.svg" alt="Аватар пользователя" width="40" height="44">
+              <img src="img/muffin-grey.svg" alt="Аватар пользователя" class="img_default">
             </div>
             <div class="ad-form__field">
-              <input type="file" id="avatar" name="avatar" class="ad-form-header__input visually-hidden">
+              <input type="file"  id="avatar" name="avatar" class="ad-form-header__input visually-hidden" onchange="preloadImg(this.files, labelAva, avaContainer)">
               <label class="ad-form-header__drop-zone" for="avatar">Загрузите или&nbsp;перетащите сюда фото</label>
             </div>
             <p class="ad-form-header__info">Заполните все обязательные поля, назначьте цену, загрузите фотографии. Придумайте интересное описание. Оно сделает объявление более живым и привлекательным. Получившееся объявление должно давать гостям полное представление о вашем жилье.</p>
@@ -112,7 +112,7 @@
 
         <fieldset class="ad-form__element ad-form__element--wide">
           <label class="ad-form__label" for="address">Адрес</label>
-          <input id="address" name="address" type="text">
+          <input id="address" name="address" type="text" readonly>
         </fieldset>
 
         <fieldset class="ad-form__element">
@@ -127,7 +127,7 @@
 
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-          <input id="price" name="price" type="number" required max="1000000" placeholder="1000">
+          <input id="price" name="price" type="number" required min="1000" max="1000000" placeholder="1000">
         </fieldset>
 
         <fieldset class="ad-form__element ad-form__element--time">
@@ -150,17 +150,17 @@
             <option value="1" selected>1 комната</option>
             <option value="2">2 комнаты</option>
             <option value="3">3 комнаты</option>
-            <option value="100">100 комнат</option>
+            <option value="0">100 комнат</option>
           </select>
         </fieldset>
 
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="capacity">Количество мест</label>
           <select id="capacity" name="capacity">
-            <option value="3" selected>для 3 гостей</option>
-            <option value="2">для 2 гостей</option>
-            <option value="1">для 1 гостя</option>
-            <option value="0">не для гостей</option>
+            <option value="3" disabled>для 3 гостей</option>
+            <option value="2" disabled>для 2 гостей</option>
+            <option value="1" selected>для 1 гостя</option>
+            <option value="0" disabled>не для гостей</option>
           </select>
         </fieldset>
 
@@ -195,7 +195,7 @@
           <label class="ad-form__label">Фотографии жилья</label>
           <div class="ad-form__photo-container">
             <div class="ad-form__upload">
-              <input type="file" id="images" name="images" class="ad-form__input visually-hidden">
+              <input type="file" id="images" name="images" class="ad-form__input visually-hidden" onchange="preloadImg(this.files, labelPhoto, photoContainer)">
               <label for="images" class="ad-form__drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
             </div>
             <div class="ad-form__photo"></div>
@@ -266,5 +266,6 @@
   </template>
 
   <script src="js/map.js"></script>
+
 </body>
 </html>

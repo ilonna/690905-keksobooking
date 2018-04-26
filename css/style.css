@@ -222,6 +222,7 @@ fieldset {
 }
 
 .map__pin--main {
+  display: block;
   width: 65px;
   height: 65px;
 
@@ -537,7 +538,7 @@ fieldset {
           align-items: center;
 
   margin-right: 10px;
-  padding: 0 15px;
+
 
   width: 70px;
   height: 70px;
@@ -546,6 +547,17 @@ fieldset {
 
   border-radius: 5px;
   background-color: #dadada;
+}
+.ad-form-header__preview img,
+.ad-form__photo img {
+  max-width: 70px;
+  max-height: 70px;
+  border-radius: 5px;
+}
+.ad-form-header__preview .img_default {
+  width: 40px;
+  height: 44px;
+  margin:  0 15px;
 }
 
 .ad-form__field {
@@ -1213,3 +1225,13 @@ fieldset {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 }
+.error {
+  color: #ff5635;
+  border-color: #ff5635 !important;
+}
+.error-message {
+  color: #ff5635;
+  font-size: 10px;
+  padding: 3px 5px;
+}
+
