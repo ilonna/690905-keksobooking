@@ -554,7 +554,7 @@ fieldset {
   max-height: 70px;
   border-radius: 5px;
 }
-.ad-form-header__preview .img_default {
+.ad-form-header__preview img {
   width: 40px;
   height: 44px;
   margin:  0 15px;
@@ -832,6 +832,13 @@ fieldset {
 
   background-color: #e4e4de;
   border-radius: 5px;
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .ad-form__element--submit {

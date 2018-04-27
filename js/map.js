@@ -241,9 +241,9 @@ var changeTime = function () {
 
 /* --- Связь между типом жилья и ценой  ------------------*/
 var changeMinPrice = function () {
-  var selectType = this.options[this.selectedIndex].getAttribute('value');
+  var valueSelectType = selectType.options[selectType.selectedIndex].getAttribute('value');
   var inputVal = selectPrice.value;
-  switch (selectType) {
+  switch (valueSelectType) {
     case 'flat':
       selectPrice.setAttribute('min', '1000');
       selectPrice.setAttribute('placeholder', '1000');
@@ -313,6 +313,7 @@ pinMainElement.addEventListener('mousedown', function (evt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+    activatePage();
   };
 
   var onMouseLeave = function (leaveEvt) {
@@ -405,6 +406,10 @@ var validateForm = function(evt) {
     }
   }
 
+  if (element === selectType) {
+    changeMinPrice();
+  }
+
   if (element === selectPrice) {
     var minPrice = element.getAttribute('min');
     var typeHome = selectType.options[selectType.selectedIndex].text;
@@ -418,6 +423,7 @@ var validateForm = function(evt) {
   }
 
   if (element === selectCapacity || element === selectRoomNumber) {
+    changeCapacity();
     var roomsValue = selectRoomNumber.options[selectRoomNumber.selectedIndex].value;
     var capacityValue = selectCapacity.options[selectCapacity.selectedIndex].value;
     var msgErrCapacity = 'Кол-во гостей не соотвествует кол-ву комнат';
@@ -432,6 +438,14 @@ var validateForm = function(evt) {
     } else {
       showError(selectCapacity, msgErrCapacity);
     }
+  }
+
+  if (element === selectTimeIn || element === selectTimeOut) {
+    changeTime();
+  }
+
+  if (element === selectTimeIn || element === selectTimeOut) {
+    changeTime();
   }
 
 };
@@ -459,7 +473,6 @@ var setDefaultPage = function () {
   adForm.reset();
   removeCard();
   pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
-  pinMainElement.addEventListener('mouseup', activatePage);
   successForm.classList.add('hidden');
 };
 
@@ -467,16 +480,8 @@ var activatePage = function () {
   setStatusPage(true);
   setCoordDotMap(parseInt(getComputedStyle(pinMainElement).left, 10), parseInt(getComputedStyle(pinMainElement).top, 10));
   resetButton.addEventListener('click', setDefaultPage);
-  pinMainElement.removeEventListener('mouseup', activatePage);
-  selectType.addEventListener('change', changeMinPrice);
-  selectTimeIn.addEventListener('change', changeTime);
-  selectTimeOut.addEventListener('change', changeTime);
-  selectRoomNumber.addEventListener('change', changeCapacity);
-
-  adForm.addEventListener('change', validateForm);
-/*  adForm.addEventListener('invalid', validateForm);*/
   sendButton.addEventListener('click', sendForm);
-
+  adForm.addEventListener('change', validateForm);
 };
 
 createCards(OFFERS_COUNT);
@@ -489,68 +494,93 @@ setDefaultPage();
 
 /*--------- Загрузка/предпоказ изображений (В ПРОЦЕССЕ) --------------------*/
 var avaUploadContainer = adForm.querySelector('.ad-form-header__upload');
-var avaContainer = avaUploadContainer.querySelector('.ad-form-header__preview');
-var imgAvaDefault = avaUploadContainer.querySelector('.img_default');
-var labelAva = avaUploadContainer.querySelector('.ad-form-header__drop-zone');
+var avaPreviewContainer = avaUploadContainer.querySelector('.ad-form-header__preview');
+var labelAvatarDrop = avaUploadContainer.querySelector('.ad-form-header__drop-zone');
+var imgAvatar = avaPreviewContainer.querySelector('img');
 
 var photoUploadContainer = adForm.querySelector('.ad-form__photo-container');
-var labelPhoto = photoUploadContainer.querySelector('.ad-form__drop-zone');
-var photoContainer = photoUploadContainer.querySelector('.ad-form__photo');
-var inp = photoUploadContainer.querySelector('.ad-form__input');
+var photoPreviewContainer = photoUploadContainer.querySelector('.ad-form__photo');
+var labelPhotoDrop = photoUploadContainer.querySelector('.ad-form__drop-zone');
 
-
-
-var preloadImg = function (files, photoLabel, photoContainer) {
-  var file;
+var arrPhotoFeatures = [];
+var previewPhoto = function (files, labelDrop, photoContainer) {
+  var photoFile;
   for(var i = 0; i < files.length; i++) {
-    file = files[i];
-    if(/image.*/.test(file.type)) {
-      var img = document.createElement('img');
-      img.src = window.URL.createObjectURL(file);
-      img.style.cssText = "width: auto; height: auto; margin: 0;";
-
-      img.onload = function() {
-        window.URL.revokeObjectURL(this.src);
-        photoLabel.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
-        setClassName(photoLabel, 'error', true);
-        setClassName(imgAvaDefault, 'hidden', false);
-        photoContainer.appendChild(img);
-      };
+    photoFile = files[i];
+    if(/image.*/.test(photoFile.type)) {
+      arrPhotoFeatures.push(photoFile);
+      var photoTemplate = photoPreviewContainer.cloneNode(true);
+      var imgPhoto = document.createElement('img');
+      imgPhoto.src = window.URL.createObjectURL(photoFile);
+      labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
+      setClassName(labelDrop, 'error', true);
+      photoTemplate.appendChild(imgPhoto);
+      if(photoPreviewContainer.childNodes.length === 0) {
+        photoPreviewContainer.remove();
+      }
+      photoContainer.appendChild(photoTemplate);
+      window.URL.revokeObjectURL(photoFile);
     } else {
-      photoLabel.innerHTML = 'Файл не является изображением';
-      setClassName(photoLabel, 'error', false);
-      setClassName(imgAvaDefault, 'hidden', true);
+      labelDrop.innerHTML = 'Файл не является изображением';
+      setClassName(labelDrop, 'error', false);
+
     }
   }
 };
 
-function drop(evt) {
+
+var previewAvatar = function (files, labelDrop) {
+  var avaFile = files[0];
+  if(files.length === 0) {
+    labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
+    imgAvatar.src = 'img/muffin-grey.svg';
+    imgAvatar.style.cssText = '';
+  } else {
+    if(/image.*/.test(avaFile.type)) {
+      imgAvatar.src = window.URL.createObjectURL(avaFile);
+      imgAvatar.style.cssText = 'width: auto; height: auto; margin: 0;';
+      labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
+      setClassName(labelDrop, 'error', true);
+      window.URL.revokeObjectURL(avaFile);
+    } else {
+      labelDrop.innerHTML = 'Файл не является изображением';
+      setClassName(labelDrop, 'error', false);
+      imgAvatar.src = 'img/muffin-grey.svg';
+      imgAvatar.style.cssText = '';
+    }
+  }
+};
+
+
+function stopDefault (evt) {
   evt.preventDefault();
+  evt.stopPropagation();
+}
+function dragEnter(evt) {
+  stopDefault(evt);
+  this.style.boxShadow = '0 0 10px 3px #ff5635';
+}
+function dragLeave(evt) {
+  stopDefault(evt);
+  this.style.boxShadow = '';
+}
+function drop(evt) {
+  stopDefault(evt);
   var elmTarget = evt.target;
   var files = evt.dataTransfer.files;
-  if (elmTarget === labelAva) {
-    preloadImg(files, labelAva, avaContainer);
+  if (elmTarget === labelAvatarDrop) {
+    previewAvatar(files, labelAvatarDrop);
   } else {
-    preloadImg(files, labelPhoto, photoContainer);
+    previewPhoto(files, labelPhotoDrop, photoUploadContainer);
   }
   this.style.boxShadow = '';
 }
-function dragLeave(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-  this.style.boxShadow = '';
-}
-function dragOver(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-  this.style.boxShadow = '0 0 10px 3px #ff5635';
-}
-labelAva.addEventListener('dragleave', dragLeave, false);
-labelAva.addEventListener('dragover', dragOver, false);
-labelAva.addEventListener('drop', drop, false);
+labelAvatarDrop.addEventListener('dragenter', dragEnter, false);
+labelAvatarDrop.addEventListener('dragover', dragEnter, false);
+labelAvatarDrop.addEventListener('dragleave', dragLeave, false);
+labelAvatarDrop.addEventListener('drop', drop, false);
 
-
-labelPhoto.addEventListener('dragleave', dragLeave, false);
-labelPhoto.addEventListener('dragover', dragOver, false);
-labelPhoto.addEventListener('drop', drop, false);
-
+labelPhotoDrop.addEventListener('dragenter', dragEnter, false);
+labelPhotoDrop.addEventListener('dragover', dragEnter, false);
+labelPhotoDrop.addEventListener('dragleave', dragLeave, false);
+labelPhotoDrop.addEventListener('drop', drop, false);
