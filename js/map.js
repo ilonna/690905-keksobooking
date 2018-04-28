@@ -229,12 +229,12 @@ var setCoordDotMap = function (endX, endY) {
 
 
 /* --- Связь между временем заезда/выезда  ------------------*/
-var changeTime = function () {
-  var select = this.selectedIndex;
-  if (this === selectTimeIn) {
-    selectTimeOut.options[select].selected=true;
+var changeTime = function (select) {
+  var indexSelectOption = select.selectedIndex;
+  if (select === selectTimeIn) {
+    selectTimeOut.options[indexSelectOption].selected=true;
   } else {
-    selectTimeIn.options[select].selected=true;
+    selectTimeIn.options[indexSelectOption].selected=true;
   }
 };
 
@@ -441,11 +441,7 @@ var validateForm = function(evt) {
   }
 
   if (element === selectTimeIn || element === selectTimeOut) {
-    changeTime();
-  }
-
-  if (element === selectTimeIn || element === selectTimeOut) {
-    changeTime();
+    changeTime(element);
   }
 
 };
