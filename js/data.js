@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  'use strict';
 
   var PIN_WIDTH = 50;
   var PIN_HEIGTH = 70;
