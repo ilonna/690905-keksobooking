@@ -40,10 +40,10 @@
   var setDefaultPhotoList = function () {
     var firstPhotoBlock = photoUploadContainer.querySelector('.ad-form__photo');
     var imgBlock = firstPhotoBlock.querySelector('img');
+    var listPhoto = Array.from(photoUploadContainer.querySelectorAll('.ad-form__photo'));
     if (imgBlock) {
       firstPhotoBlock.removeChild(imgBlock);
     }
-    var listPhoto = Array.from(photoUploadContainer.querySelectorAll('.ad-form__photo'));
     listPhoto.forEach(function (value) {
       value.remove();
     });
@@ -88,9 +88,9 @@
     var selectRoomValue = selectRoomNumber.options[selectRoomIndex].getAttribute('value');
     var selectCapacityOptions = selectCapacity.options;
 
-    for (var k = 0; k < selectRoomNumber.length; k++) {
-      selectCapacity.options[k].disabled = true;
-    }
+    Array.from(selectRoomNumber).forEach(function (value, index) {
+      selectCapacity.options[index].disabled = true;
+    });
 
     var selArray = Array.from(selectCapacityOptions).filter(function (el, index) {
       if (selectRoomValue === '0' || selectRoomValue === '1') {
@@ -102,9 +102,9 @@
       }
     });
 
-    for (var i = 0; i < selArray.length; i++) {
-      selectCapacity.options[selArray[i].index].disabled = false;
-    }
+    selArray.forEach(function (value) {
+      selectCapacity.options[value.index].disabled = false;
+    });
   };
 
 
