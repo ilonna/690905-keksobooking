@@ -79,6 +79,7 @@
     removeCard();
     pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
     sendButton.innerText = 'Опубликовать';
+    sendButton.removeAttribute('disabled');
     successForm.classList.add('hidden');
     window.form.setDefaultAva();
     window.form.setDefaultPhotoList();
