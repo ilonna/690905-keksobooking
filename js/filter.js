@@ -35,14 +35,9 @@
   };
 
   var filterFeatures = function (myFeatures, offerFeatures) {
+    var found = false;
     for (var j = 0; j < myFeatures.length; j++) {
-      var found = false;
-      for (var i = 0; i < offerFeatures.length; i++) {
-        if (myFeatures[j] === offerFeatures[i]) {
-          found = true;
-          break;
-        }
-      }
+      found = offerFeatures.includes(myFeatures[j]);
       if (!found) {
         return false;
       }
