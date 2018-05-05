@@ -51,20 +51,20 @@
   };
 
   var createFiltredOFFER = function (newArray) {
-    window.pin.statusPins(null, true);
+    window.pin.setStatusPins(null, true);
     window.card.removeCard();
     window.pin.generatePins(newArray);
-    window.pin.statusPins(true, null);
+    window.pin.setStatusPins(true, null);
   };
 
   var filterOFFERS = function () {
     var createFiltredOFFERDebounced = window.util.setDebounce(createFiltredOFFER, DEBOUNCE_FILTER_INTERVAL);
     var newOFFERS = window.data.OFFERS.filter(function (item) {
-      return (((filterOFFER.type === 'any') ? true : (item.offer.type === filterOFFER.type)) &&
-        ((filterOFFER.price === 'any') ? true : filterPrise(filterOFFER.price, item)) &&
-        ((filterOFFER.rooms === 'any') ? true : (item.offer.rooms === parseInt(filterOFFER.rooms))) &&
-        ((filterOFFER.guests === 'any') ? true : (item.offer.guests === parseInt(filterOFFER.guests))) &&
-        ((filterOFFER.features === 'any') ? true : filterFeatures(filterOFFER.features, item.offer.features))
+      return (((filterOFFER.type === 'any') || (item.offer.type === filterOFFER.type)) &&
+        ((filterOFFER.price === 'any') || filterPrise(filterOFFER.price, item)) &&
+        ((filterOFFER.rooms === 'any') || (item.offer.rooms === parseInt(filterOFFER.rooms))) &&
+        ((filterOFFER.guests === 'any') || (item.offer.guests === parseInt(filterOFFER.guests))) &&
+        ((filterOFFER.features === 'any') || filterFeatures(filterOFFER.features, item.offer.features))
       );
     });
     createFiltredOFFERDebounced(newOFFERS);
@@ -77,7 +77,7 @@
 
     if (changeField.getAttribute('name') === 'features') {
       var checkedFeature = [];
-      featureFilter.map(function (item) {
+      featureFilter.forEach(function (item) {
         if (item.checked === true) {
           checkedFeature.push(item.value);
         }

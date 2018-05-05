@@ -50,25 +50,13 @@
 
   var onError = function (message) {
     var errorPopup = document.createElement('div');
-    errorPopup.style = 'position: fixed;\n' +
-      '    top: 0;\n' +
-      '    left: 0;\n' +
-      '    width: 100%;\n' +
-      '    height: 100%;\n' +
-      '    background: rgba(0, 0, 0, 0.8);\n' +
-      '    font-size: 50px;\n' +
-      '    color: #fff;\n' +
-      '    box-shadow: 0px 0px 25px red;\n' +
-      '    border: 4px solid red;\n' +
-      '    padding: 200px 50px;\n' +
-      '    text-align: center;\n' +
-      '    z-index: 99;';
+    errorPopup.classList.add('popup-error_message');
     errorPopup.textContent = message;
     document.body.insertAdjacentElement('afterbegin', errorPopup);
   };
 
-  var upload = function (data, succes) {
-    var xhr = setup(succes, onError);
+  var upload = function (data, onSuccess) {
+    var xhr = setup(onSuccess, onError);
     xhr.open('POST', URL_UPLOAD);
     if(xhr.readyState === 1){
       window.map.sendButton.innerText = 'Отправляю';
@@ -77,8 +65,8 @@
     xhr.send(data);
   };
 
-  var download = function (succes) {
-    var xhr = setup(succes, onError);
+  var download = function (onSuccess) {
+    var xhr = setup(onSuccess, onError);
     xhr.open('GET', URL_DOWNLOAD);
     xhr.send();
   };

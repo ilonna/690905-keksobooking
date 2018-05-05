@@ -35,7 +35,7 @@
   };
 
   var setStatusPage = function (status) {
-    window.pin.statusPins(status, null);
+    window.pin.setStatusPins(status, null);
     setClassName(window.card.container, 'map--faded', status);
     setClassName(window.form.adForm, 'ad-form--disabled', status);
     setAttributeFormElements(fieldsetElements, status);

@@ -17,11 +17,8 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var showPin = function () {
-
-  };
-  var statusPins = function (show, remove) {
-    var pinArray = Array.from(document.querySelectorAll('.map__pin'));
+  var setStatusPins = function (show, remove) {
+    var pinArray = Array.from(pinsContainer.querySelectorAll('.map__pin'));
     pinArray.forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         if (show === true) {
@@ -60,7 +57,7 @@
   window.pin = {
     createPin: createPin,
     generatePins: generatePins,
-    statusPins: statusPins,
+    setStatusPins: setStatusPins,
     pinsContainer: pinsContainer,
     PIN_LIMIT: PIN_LIMIT
   }

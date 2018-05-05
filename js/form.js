@@ -43,10 +43,10 @@
     if (imgBlock) {
       firstPhotoBlock.removeChild(imgBlock);
     }
-    var listPhoto = photoUploadContainer.querySelectorAll('.ad-form__photo');
-    for (var i = 1; i < listPhoto.length; i++) {
-      listPhoto[i].remove();
-    }
+    var listPhoto = Array.from(photoUploadContainer.querySelectorAll('.ad-form__photo'));
+    listPhoto.forEach(function (value) {
+      value.remove();
+    });
     labelPhotoDrop.innerHTML = messageDropImg.primary;
     window.map.setClassName(labelPhotoDrop, 'error', true);
   };
