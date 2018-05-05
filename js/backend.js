@@ -4,6 +4,7 @@
 
   window.OFFERS = [];
   window.PIN_LIMIT = 5;
+  var DEBOUNCE_PAGE_INTERVAL = 3000;
 
   var TIMEOUT = 10000;
   var URL_UPLOAD = 'https://js.dump.academy/keksobooking';
@@ -53,17 +54,17 @@
 
   var onError = function (message) {
     var errorPopup = document.createElement('div');
-    errorPopup.style = 'position: absolute;\n' +
-      '    top: 100px;\n' +
-      '    left: 50%;\n' +
-      '    width: 500px;\n' +
-      '    background: #fff;\n' +
-      '    margin-left: -250px;\n' +
-      '    font-size: 30px;\n' +
-      '    color: #000;\n' +
+    errorPopup.style = 'position: fixed;\n' +
+      '    top: 0;\n' +
+      '    left: 0;\n' +
+      '    width: 100%;\n' +
+      '    height: 100%;\n' +
+      '    background: rgba(0, 0, 0, 0.8);\n' +
+      '    font-size: 50px;\n' +
+      '    color: #fff;\n' +
       '    box-shadow: 0px 0px 25px red;\n' +
       '    border: 4px solid red;\n' +
-      '    padding: 100px 50px;\n' +
+      '    padding: 200px 50px;\n' +
       '    text-align: center;\n' +
       '    z-index: 99;';
     errorPopup.textContent = message;
@@ -82,13 +83,18 @@
 
   var onUploadSucces = function (evt) {
     console.log(evt);
+    var setDefaultPageDebounce = window.util.setDebounce(window.map.setDefaultPage, DEBOUNCE_PAGE_INTERVAL);
     successForm.classList.remove('hidden');
-    window.map.setDefaultPage();
+    setDefaultPageDebounce();
   };
 
   var upload = function (data) {
     var xhr = setup(onUploadSucces, onError);
     xhr.open('POST', URL_UPLOAD);
+    if(xhr.readyState === 1){
+      sendButton.innerText = 'Отправляю';
+      sendButton.setAttribute('disabled', true);
+    }
     xhr.send(data);
   };
 

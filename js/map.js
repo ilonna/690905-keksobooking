@@ -13,7 +13,7 @@
   var inputAddress = adForm.querySelector('#address');
   var fieldsetElements = adForm.querySelectorAll('fieldset');
   var resetButton = adForm.querySelector('.ad-form__reset');
-  var sendButton = adForm.querySelector('.ad-form__submit');
+  window.sendButton = adForm.querySelector('.ad-form__submit');
   var featureCheckbox = Array.from(adForm.querySelectorAll('.features input'));
 
   window.successForm = document.querySelector('.success');
@@ -78,36 +78,12 @@
     adForm.reset();
     removeCard();
     pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
+    sendButton.innerText = 'Опубликовать';
     successForm.classList.add('hidden');
     window.form.setDefaultAva();
     window.form.setDefaultPhotoList();
     pinMainElement.addEventListener('keydown', onPinEnterPress);
   };
-
-
-
-
-
-
-  var focusFun = function (evt) {
-    var inp = evt.target;
-    console.log(inp);
-  };
-
-  var allInput = document.querySelectorAll('input');
-
-  for (var i = 0; i < allInput.length; i++) {
-    allInput[i].addEventListener('focus', focusFun);
-  }
-
-
-
-
-
-
-
-
-
 
 
   /* ------- drag&drop -----------------------*/

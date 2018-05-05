@@ -2,7 +2,6 @@
 
 (function () {
 
-  var DEBOUNCE_INTERVAL = 500;
   var lastTimeout;
 
   var onBlurCheckbox = function (evt) {
@@ -43,17 +42,17 @@
 
 
 
-  var setDebounce = function (fun) {
+  var setDebounce = function (fun, interval) {
     var lastTimeout;
     return function () {
+      var args = arguments;
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
-      var args = arguments;
       lastTimeout = window.setTimeout(function () {
         fun.apply(null, args);
         lastTimeout = null;
-      }, DEBOUNCE_INTERVAL);
+      }, interval);
     };
   };
 

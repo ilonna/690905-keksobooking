@@ -2,7 +2,7 @@
 
 (function () {
 
-
+  var DEBOUNCE_FILTER_INTERVAL = 500;
   var filterContainer = document.querySelector('.map__filters');
   var typeFilter = filterContainer.querySelector('#housing-type');
   var priceFilter = filterContainer.querySelector('#housing-price');
@@ -66,7 +66,7 @@
   };
 
   var filterOFFERS = function () {
-    var createFiltredOFFERDebounced = window.util.setDebounce(createFiltredOFFER);
+    var createFiltredOFFERDebounced = window.util.setDebounce(createFiltredOFFER, DEBOUNCE_FILTER_INTERVAL);
     var newOFFERS = OFFERS.filter(function (item) {
       return (((filterOFFER.type === 'any') ? true : (item.offer.type === filterOFFER.type)) &&
         ((filterOFFER.price === 'any') ? true : filterPrise(filterOFFER.price, item)) &&
