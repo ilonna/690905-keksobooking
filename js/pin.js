@@ -5,9 +5,9 @@
   var DOT_PIN_X = 25;
   var DOT_PIN_Y = 70;
   var ESC_KEYCODE = 27;
-  var PIN_TEMPLATE = TEMPLATE.content.querySelector('.map__pin');
-  var buttonClosePopup = cardContainer.querySelector('.popup__close');
-  window.pinsContainer = container.querySelector('.map__pins');
+  var PIN_TEMPLATE = window.card.TEMPLATE.content.querySelector('.map__pin');
+  var buttonClosePopup = window.card.cardContainer.querySelector('.popup__close');
+  var pinsContainer = window.card.container.querySelector('.map__pins');
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -35,7 +35,8 @@
   };
 
   window.pin = {
-    createPin: createPin
+    createPin: createPin,
+    pinsContainer: pinsContainer
   }
 
 })();

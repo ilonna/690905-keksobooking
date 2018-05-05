@@ -5,18 +5,16 @@
   var OFFERS_COUNT = 8;
   var PIN_DEFAULT_TOP = 375;
   var PIN_DEFAULT_LEFT = 570;
-  window.ENTER_KEYCODE = 13;
+  var ENTER_KEYCODE = 13;
 
-  var pinMainElement = pinsContainer.querySelector('.map__pin--main');
+  var pinMainElement = window.pin.pinsContainer.querySelector('.map__pin--main');
   var imgPinElement = pinMainElement.querySelector('img');
-
-  var inputAddress = adForm.querySelector('#address');
-  var fieldsetElements = adForm.querySelectorAll('fieldset');
-  var resetButton = adForm.querySelector('.ad-form__reset');
-  window.sendButton = adForm.querySelector('.ad-form__submit');
-  var featureCheckbox = Array.from(adForm.querySelectorAll('.features input'));
-
-  window.successForm = document.querySelector('.success');
+  var inputAddress = window.form.adForm.querySelector('#address');
+  var fieldsetElements = window.form.adForm.querySelectorAll('fieldset');
+  var resetButton = window.form.adForm.querySelector('.ad-form__reset');
+  var sendButton = window.form.adForm.querySelector('.ad-form__submit');
+  var featureCheckbox = Array.from(window.form.adForm.querySelectorAll('.features input'));
+  var successForm = document.querySelector('.success');
 
   var setAttributeFormElements = function (selector, status) {
     selector.forEach(function (element) {
@@ -37,11 +35,11 @@
   };
 
   var setStatusPage = function (status) {
-    pinsContainer.querySelectorAll('.map__pin').forEach(function (element) {
+    window.pin.pinsContainer.querySelectorAll('.map__pin').forEach(function (element) {
       setClassName(element, 'hidden', status);
     });
-    setClassName(container, 'map--faded', status);
-    setClassName(adForm, 'ad-form--disabled', status);
+    setClassName(window.card.container, 'map--faded', status);
+    setClassName(window.form.adForm, 'ad-form--disabled', status);
     setAttributeFormElements(fieldsetElements, status);
   };
 
@@ -49,13 +47,13 @@
     setStatusPage(true);
     setCoordDotMap(parseInt(getComputedStyle(pinMainElement).left, 10), parseInt(getComputedStyle(pinMainElement).top, 10));
     resetButton.addEventListener('click', setDefaultPage);
-    window.util.addFocusListener(featureFilter);
+    window.util.addFocusListener(window.filter.featureFilter);
     window.util.addFocusListener(featureCheckbox);
-    adForm.addEventListener('change', window.form.validate);
+    window.form.adForm.addEventListener('change', window.form.validate);
   };
 
   var removeCard = function () {
-    cardContainer.remove();
+    window.card.cardContainer.remove();
   };
 
   var onPinEnterPress = function (evt) {
@@ -75,12 +73,12 @@
 
   var setDefaultPage = function () {
     setStatusPage(false);
-    adForm.reset();
+    window.form.adForm.reset();
     removeCard();
     pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
     sendButton.innerText = 'Опубликовать';
-    sendButton.removeAttribute('disabled');
-    successForm.classList.add('hidden');
+    sendButton.removeAttribute('disabled', true);
+    setClassName(successForm, 'hidden', false);
     window.form.setDefaultAva();
     window.form.setDefaultPhotoList();
     pinMainElement.addEventListener('keydown', onPinEnterPress);
@@ -92,10 +90,10 @@
     evt.preventDefault();
 
     var limitCoords = {
-      top: pinsContainer.offsetTop,
-      right: pinsContainer.offsetWidth - pinMainElement.offsetWidth,
-      bottom: pinsContainer.offsetHeight - imgPinElement.offsetHeight - parseInt(getComputedStyle(pinMainElement, '::after').height, 10),
-      left: pinsContainer.offsetLeft
+      top: window.pin.pinsContainer.offsetTop,
+      right: window.pin.pinsContainer.offsetWidth - pinMainElement.offsetWidth,
+      bottom: window.pin.pinsContainer.offsetHeight - imgPinElement.offsetHeight - parseInt(getComputedStyle(pinMainElement, '::after').height, 10),
+      left: window.pin.pinsContainer.offsetLeft
     };
 
     var startCoords = {
@@ -113,7 +111,7 @@
     var onMouseLeave = function (leaveEvt) {
       leaveEvt.preventDefault();
       onMouseUp(leaveEvt);
-      pinsContainer.removeEventListener('mouseleave', onMouseLeave);
+      window.pin.pinsContainer.removeEventListener('mouseleave', onMouseLeave);
     };
 
     var onMouseMove = function (moveEvt) {
@@ -152,7 +150,7 @@
 
       setCoordDotMap(endCoords.x, endCoords.y);
       activatePage();
-      pinsContainer.addEventListener('mouseleave', onMouseLeave);
+      window.pin.pinsContainer.addEventListener('mouseleave', onMouseLeave);
     };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
@@ -161,6 +159,9 @@
   window.map = {
     removeCard: removeCard,
     setClassName: setClassName,
-    setDefaultPage: setDefaultPage
+    setDefaultPage: setDefaultPage,
+    sendButton: sendButton,
+    successForm: successForm,
+    ENTER_KEYCODE: ENTER_KEYCODE
   }
 })();

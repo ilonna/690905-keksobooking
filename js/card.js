@@ -2,10 +2,10 @@
 
 (function () {
 
-  window.TEMPLATE = document.querySelector('template');
-  window.container = document.querySelector('.map');
+  var TEMPLATE = document.querySelector('template');
+  var container = document.querySelector('.map');
   var CARD_TEMPLATE = TEMPLATE.content.querySelector('.map__card');
-  window.cardContainer = CARD_TEMPLATE.cloneNode(true);
+  var cardContainer = CARD_TEMPLATE.cloneNode(true);
   var featuresContainer = cardContainer.querySelector('.popup__features');
   var photoFeaturesContainer = cardContainer.querySelector('.popup__photos');
   var photoFeatures = photoFeaturesContainer.querySelector('img');
@@ -51,7 +51,10 @@
   };
 
   window.card = {
-    generateOffers: generateOffers
+    generateOffers: generateOffers,
+    TEMPLATE: TEMPLATE,
+    container: container,
+    cardContainer: cardContainer
   }
 
 })();

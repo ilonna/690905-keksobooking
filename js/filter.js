@@ -8,7 +8,7 @@
   var priceFilter = filterContainer.querySelector('#housing-price');
   var roomFilter = filterContainer.querySelector('#housing-rooms');
   var guestFilter = filterContainer.querySelector('#housing-guests');
-  window.featureFilter = Array.from(document.querySelectorAll('#housing-features input'));
+  var featureFilter = Array.from(document.querySelectorAll('#housing-features input'));
 
   var filterOFFER = {
     type: 'any',
@@ -52,7 +52,7 @@
 
   var createFiltredOFFER = function (newArray) {
     var pinsArray = Array.from(document.querySelectorAll('.map__pin'));
-    var limitFilterOffers = newArray.slice(0,PIN_LIMIT);
+    var limitFilterOffers = newArray.slice(0, window.backend.PIN_LIMIT);
     for (var j = 0; j < pinsArray.length; j++) {
       if (!pinsArray[j].classList.contains('map__pin--main')) {
         pinsArray[j].remove();
@@ -67,7 +67,7 @@
 
   var filterOFFERS = function () {
     var createFiltredOFFERDebounced = window.util.setDebounce(createFiltredOFFER, DEBOUNCE_FILTER_INTERVAL);
-    var newOFFERS = OFFERS.filter(function (item) {
+    var newOFFERS = window.backend.OFFERS.filter(function (item) {
       return (((filterOFFER.type === 'any') ? true : (item.offer.type === filterOFFER.type)) &&
         ((filterOFFER.price === 'any') ? true : filterPrise(filterOFFER.price, item)) &&
         ((filterOFFER.rooms === 'any') ? true : (item.offer.rooms === parseInt(filterOFFER.rooms))) &&
@@ -104,7 +104,8 @@
 
 
   window.filter = {
-    changeFilter: changeFilter
+    changeFilter: changeFilter,
+    featureFilter: featureFilter
   };
 
 

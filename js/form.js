@@ -2,15 +2,7 @@
 
 (function () {
 
-  window.defaultSrcAva = 'img/muffin-grey.svg';
-  window.messageDropImg = {
-    error: 'Файл не является изображением',
-    primary: 'Загрузите или&nbsp;перетащите сюда фото'
-  };
-  window.arrPhotoFeatures = [];
-  window.avatarFile = 0;
-  window.adForm = document.querySelector('.ad-form');
-
+  var adForm = document.querySelector('.ad-form');
   var selectTimeIn = adForm.querySelector('#timein');
   var selectTimeOut = adForm.querySelector('#timeout');
   var selectType = adForm.querySelector('#type');
@@ -24,10 +16,19 @@
   var avaPreviewContainer = avaUploadContainer.querySelector('.ad-form-header__preview');
   var labelAvatarDrop = avaUploadContainer.querySelector('.ad-form-header__drop-zone');
   var imgAvatar = avaPreviewContainer.querySelector('img');
-
   var photoUploadContainer = adForm.querySelector('.ad-form__photo-container');
   var photoPreviewContainer = photoUploadContainer.querySelector('.ad-form__photo');
   var labelPhotoDrop = photoUploadContainer.querySelector('.ad-form__drop-zone');
+
+  var defaultSrcAva = 'img/muffin-grey.svg';
+  var arrPhotoFeatures = [];
+  var avatarFile = 0;
+  var messageDropImg = {
+    error: 'Файл не является изображением',
+    primary: 'Загрузите или&nbsp;перетащите сюда фото'
+  };
+
+
 
   var setDefaultAva = function () {
     imgAvatar.src = defaultSrcAva;
@@ -202,21 +203,20 @@
 
   /*----------------  Validate  ---------------------------------------*/
   var showError = function (element, errorMessage) {
-    var container = element.parentNode;
+    var parentContainer = element.parentNode;
     resetError(element);
     var msgElement = document.createElement('div');
     msgElement.className = 'error-message';
     msgElement.innerHTML = errorMessage;
     element.setCustomValidity(errorMessage);
     element.classList.add('error');
-    container.appendChild(msgElement);
-
+    parentContainer.appendChild(msgElement);
   };
 
   var resetError = function (element) {
-    var container = element.parentNode;
-    if (container.lastChild.className === 'error-message') {
-      container.removeChild(container.lastChild);
+    var parentContainer = element.parentNode;
+    if (parentContainer.lastChild.className === 'error-message') {
+      parentContainer.removeChild(parentContainer.lastChild);
       element.setCustomValidity('');
       element.classList.remove('error');
     }
@@ -285,7 +285,10 @@
   window.form = {
     setDefaultAva: setDefaultAva,
     setDefaultPhotoList: setDefaultPhotoList,
-    validate: validate
+    validate: validate,
+    adForm: adForm,
+    arrPhotoFeatures: arrPhotoFeatures,
+    avatarFile: avatarFile
   }
 
 })();

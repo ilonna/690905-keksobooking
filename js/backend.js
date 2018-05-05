@@ -2,10 +2,9 @@
 
 (function () {
 
-  window.OFFERS = [];
-  window.PIN_LIMIT = 5;
+  var OFFERS = [];
+  var PIN_LIMIT = 5;
   var DEBOUNCE_PAGE_INTERVAL = 3000;
-
   var TIMEOUT = 10000;
   var URL_UPLOAD = 'https://js.dump.academy/keksobooking';
   var URL_DOWNLOAD = 'https://js.dump.academy/keksobooking/data';
@@ -73,8 +72,8 @@
 
 
   var onDownloadSuccess = function (data) {
-    window.OFFERS = data;
-    var limitOffers = OFFERS.slice(0,PIN_LIMIT);
+    window.backend.OFFERS = data;
+    var limitOffers = window.backend.OFFERS.slice(0, window.backend.PIN_LIMIT);
     for (var i = 0; i < limitOffers.length; i++) {
       var offer = limitOffers[i];
       window.pin.createPin(offer);
@@ -84,7 +83,7 @@
   var onUploadSucces = function (evt) {
     console.log(evt);
     var setDefaultPageDebounce = window.util.setDebounce(window.map.setDefaultPage, DEBOUNCE_PAGE_INTERVAL);
-    successForm.classList.remove('hidden');
+    window.map.setClassName(window.map.successForm, 'hidden', true);
     setDefaultPageDebounce();
   };
 
@@ -92,8 +91,8 @@
     var xhr = setup(onUploadSucces, onError);
     xhr.open('POST', URL_UPLOAD);
     if(xhr.readyState === 1){
-      sendButton.innerText = 'Отправляю';
-      sendButton.setAttribute('disabled', true);
+      window.map.sendButton.innerText = 'Отправляю';
+      window.map.sendButton.setAttribute('disabled', true);
     }
     xhr.send(data);
   };
@@ -107,7 +106,9 @@
 
   window.backend = {
     download: download,
-    upload: upload
+    upload: upload,
+    OFFERS: OFFERS,
+    PIN_LIMIT: PIN_LIMIT
   };
 
 })();

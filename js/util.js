@@ -10,7 +10,7 @@
     thisBlur.removeEventListener('blur', onBlurCheckbox);
   };
   var onEnterCheckbox = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.map.ENTER_KEYCODE) {
       evt.stopPropagation();
       evt.preventDefault();
       var thisEnter = evt.target;
