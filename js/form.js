@@ -44,9 +44,9 @@
     if (imgBlock) {
       firstPhotoBlock.removeChild(imgBlock);
     }
-    listPhoto.forEach(function (value) {
+    for(var i = 1; i < listPhoto.length; i++) {
       value.remove();
-    });
+    }
     labelPhotoDrop.innerHTML = messageDropImg.primary;
     window.map.setClassName(labelPhotoDrop, 'error', true);
   };
