@@ -36,7 +36,11 @@
     });
   };
 
-  var generateOffers = function (offer) {
+  var removeCard = function () {
+    cardContainer.remove();
+  };
+
+  var generateCard = function (offer) {
     cardContainer.querySelector('.popup__title').textContent = offer.offer.title;
     cardContainer.querySelector('.popup__text--address').textContent = offer.offer.address;
     cardContainer.querySelector('.popup__text--price').textContent = offer.offer.price + '₽/ночь';
@@ -51,7 +55,8 @@
   };
 
   window.card = {
-    generateOffers: generateOffers,
+    generateCard: generateCard,
+    removeCard: removeCard,
     TEMPLATE: TEMPLATE,
     container: container,
     cardContainer: cardContainer

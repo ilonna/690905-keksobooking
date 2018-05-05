@@ -2,8 +2,6 @@
 
 (function () {
 
-  var OFFERS = [];
-  var PIN_LIMIT = 5;
   var TIMEOUT = 10000;
   var URL_UPLOAD = 'https://js.dump.academy/keksobooking';
   var URL_DOWNLOAD = 'https://js.dump.academy/keksobooking/data';
@@ -88,9 +86,7 @@
 
   window.backend = {
     download: download,
-    upload: upload,
-    OFFERS: OFFERS,
-    PIN_LIMIT: PIN_LIMIT
+    upload: upload
   };
 
 })();

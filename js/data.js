@@ -2,14 +2,12 @@
 
 (function () {
 
+  var OFFERS = [];
   var DEBOUNCE_PAGE_INTERVAL = 3000;
 
   var onDownloadSuccess = function (data) {
-    window.backend.OFFERS = data;
-    var limitOffers = window.backend.OFFERS.slice(0, window.backend.PIN_LIMIT);
-    limitOffers.forEach(function (offer) {
-      window.pin.createPin(offer);
-    });
+    OFFERS.push.apply(OFFERS, data);
+    window.pin.generatePins(OFFERS);
   };
 
   var onUploadSucces = function (evt) {
@@ -34,5 +32,8 @@
     window.backend.upload(formData, onUploadSucces);
   });
 
-  window.map.setDefaultPage();
+  window.data = {
+    OFFERS: OFFERS
+  };
+
 })();

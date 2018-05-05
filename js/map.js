@@ -35,9 +35,7 @@
   };
 
   var setStatusPage = function (status) {
-    window.pin.pinsContainer.querySelectorAll('.map__pin').forEach(function (element) {
-      setClassName(element, 'hidden', status);
-    });
+    window.pin.statusPins(status, null);
     setClassName(window.card.container, 'map--faded', status);
     setClassName(window.form.adForm, 'ad-form--disabled', status);
     setAttributeFormElements(fieldsetElements, status);
@@ -52,9 +50,6 @@
     window.form.adForm.addEventListener('change', window.form.validate);
   };
 
-  var removeCard = function () {
-    window.card.cardContainer.remove();
-  };
 
   var onPinEnterPress = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
@@ -74,7 +69,7 @@
   var setDefaultPage = function () {
     setStatusPage(false);
     window.form.adForm.reset();
-    removeCard();
+    window.card.removeCard();
     pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
     sendButton.innerText = 'Опубликовать';
     sendButton.removeAttribute('disabled', true);
@@ -157,7 +152,6 @@
   });
 
   window.map = {
-    removeCard: removeCard,
     setClassName: setClassName,
     setDefaultPage: setDefaultPage,
     sendButton: sendButton,

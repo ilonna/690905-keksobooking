@@ -51,23 +51,15 @@
   };
 
   var createFiltredOFFER = function (newArray) {
-    var pinsArray = Array.from(document.querySelectorAll('.map__pin'));
-    var limitFilterOffers = newArray.slice(0, window.backend.PIN_LIMIT);
-    for (var j = 0; j < pinsArray.length; j++) {
-      if (!pinsArray[j].classList.contains('map__pin--main')) {
-        pinsArray[j].remove();
-      }
-    }
-    window.map.removeCard();
-    for (var i = 0; i < limitFilterOffers.length; i++) {
-      var offer = limitFilterOffers[i];
-      window.pin.createPin(offer, true);
-    }
+    window.pin.statusPins(null, true);
+    window.card.removeCard();
+    window.pin.generatePins(newArray);
+    window.pin.statusPins(true, null);
   };
 
   var filterOFFERS = function () {
     var createFiltredOFFERDebounced = window.util.setDebounce(createFiltredOFFER, DEBOUNCE_FILTER_INTERVAL);
-    var newOFFERS = window.backend.OFFERS.filter(function (item) {
+    var newOFFERS = window.data.OFFERS.filter(function (item) {
       return (((filterOFFER.type === 'any') ? true : (item.offer.type === filterOFFER.type)) &&
         ((filterOFFER.price === 'any') ? true : filterPrise(filterOFFER.price, item)) &&
         ((filterOFFER.rooms === 'any') ? true : (item.offer.rooms === parseInt(filterOFFER.rooms))) &&
@@ -106,6 +98,7 @@
   window.filter = {
     changeFilter: changeFilter,
     featureFilter: featureFilter
+
   };
 
 
