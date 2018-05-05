@@ -118,7 +118,6 @@
       photoFile = files[i];
       if (/image.*/.test(photoFile.type)) {
         arrPhotoFeatures.push(photoFile);
-        console.log(files);
         var photoTemplate = photoPreviewContainer.cloneNode(true);
         var imgPhoto = document.createElement('img');
         imgPhoto.src = window.URL.createObjectURL(photoFile);
@@ -132,14 +131,12 @@
         labelDrop.innerHTML = messageDropImg.error;
         window.map.setClassName(labelDrop, 'error', false);
       }
-      console.log(arrPhotoFeatures);
     }
     imagesField.value = '';
   };
 
 
   var previewAvatar = function (files, labelDrop, fromDrop) {
-    console.log(files);
     var avaFile = files[0];
     if (files.length === 0) {
       setDefaultAva();
