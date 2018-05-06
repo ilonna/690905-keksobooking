@@ -2,8 +2,6 @@
 
 (function () {
 
-  var lastTimeout;
-
   var onBlurCheckbox = function (evt) {
     var thisBlur = evt.target;
     thisBlur.removeEventListener('keydown', onEnterCheckbox);

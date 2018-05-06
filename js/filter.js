@@ -4,10 +4,6 @@
 
   var DEBOUNCE_FILTER_INTERVAL = 500;
   var filterContainer = document.querySelector('.map__filters');
-  var typeFilter = filterContainer.querySelector('#housing-type');
-  var priceFilter = filterContainer.querySelector('#housing-price');
-  var roomFilter = filterContainer.querySelector('#housing-rooms');
-  var guestFilter = filterContainer.querySelector('#housing-guests');
   var featureFilter = Array.from(document.querySelectorAll('#housing-features input'));
 
   var filterOFFER = {
@@ -32,6 +28,7 @@
       case 'high':
         return item.offer.price > priceValue.high;
     }
+    throw new Error('Unknow filter value');
   };
 
   var filterFeatures = function (myFeatures, offerFeatures) {
@@ -57,8 +54,8 @@
     var newOFFERS = window.data.OFFERS.filter(function (item) {
       return (((filterOFFER.type === 'any') || (item.offer.type === filterOFFER.type)) &&
         ((filterOFFER.price === 'any') || filterPrise(filterOFFER.price, item)) &&
-        ((filterOFFER.rooms === 'any') || (item.offer.rooms === parseInt(filterOFFER.rooms))) &&
-        ((filterOFFER.guests === 'any') || (item.offer.guests === parseInt(filterOFFER.guests))) &&
+        ((filterOFFER.rooms === 'any') || (item.offer.rooms === parseInt(filterOFFER.rooms, 10))) &&
+        ((filterOFFER.guests === 'any') || (item.offer.guests === parseInt(filterOFFER.guests, 10))) &&
         ((filterOFFER.features === 'any') || filterFeatures(filterOFFER.features, item.offer.features))
       );
     });
