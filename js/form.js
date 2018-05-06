@@ -29,7 +29,6 @@
   };
 
 
-
   var setDefaultAva = function () {
     imgAvatar.src = defaultSrcAva;
     imgAvatar.style.cssText = '';
@@ -44,7 +43,7 @@
     if (imgBlock) {
       firstPhotoBlock.removeChild(imgBlock);
     }
-    for(var i = 1; i < listPhoto.length; i++) {
+    for (var i = 1; i < listPhoto.length; i++) {
       listPhoto[i].remove();
     }
     labelPhotoDrop.innerHTML = messageDropImg.primary;
@@ -159,7 +158,7 @@
   };
 
 
-  var stopDefault = function(evt) {
+  var stopDefault = function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
   };
@@ -195,7 +194,6 @@
   labelPhotoDrop.addEventListener('dragover', dragEnter, false);
   labelPhotoDrop.addEventListener('dragleave', dragLeave, false);
   labelPhotoDrop.addEventListener('drop', drop, false);
-
 
 
   /*----------------  Validate  ---------------------------------------*/
