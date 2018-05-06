@@ -14,14 +14,14 @@
       evt.stopPropagation();
       evt.preventDefault();
       var thisEnter = evt.target;
-      if(thisEnter.checked) {
+      if (thisEnter.checked) {
         thisEnter.checked = false;
-        if(thisEnter.getAttribute('data-id') === 'features-filter'){
+        if (thisEnter.getAttribute('data-id') === 'features-filter') {
           window.filter.changeFilter(evt);
         }
       } else {
         thisEnter.checked = true;
-        if(thisEnter.getAttribute('data-id') === 'features-filter') {
+        if (thisEnter.getAttribute('data-id') === 'features-filter') {
           window.filter.changeFilter(evt);
         }
       }
@@ -38,8 +38,6 @@
       value.addEventListener('focus', onFocusCheckbox);
     });
   };
-
-
 
 
   var setDebounce = function (fun, interval) {

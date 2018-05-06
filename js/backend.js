@@ -58,7 +58,7 @@
   var upload = function (data, onSuccess) {
     var xhr = setup(onSuccess, onError);
     xhr.open('POST', URL_UPLOAD);
-    if(xhr.readyState === 1){
+    if (xhr.readyState === 1) {
       window.map.sendButton.innerText = 'Отправляю';
       window.map.sendButton.setAttribute('disabled', true);
     }

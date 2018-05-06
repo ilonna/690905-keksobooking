@@ -89,7 +89,6 @@
   filterContainer.addEventListener('change', changeFilter);
 
 
-
   window.filter = {
     changeFilter: changeFilter,
     featureFilter: featureFilter
