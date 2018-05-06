@@ -2,7 +2,6 @@
 
 (function () {
 
-  var OFFERS_COUNT = 8;
   var PIN_DEFAULT_TOP = 375;
   var PIN_DEFAULT_LEFT = 570;
   var ENTER_KEYCODE = 13;
@@ -157,5 +156,5 @@
     sendButton: sendButton,
     successForm: successForm,
     ENTER_KEYCODE: ENTER_KEYCODE
-  }
+  };
 })();

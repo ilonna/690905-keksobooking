@@ -60,6 +60,6 @@
     TEMPLATE: TEMPLATE,
     container: container,
     cardContainer: cardContainer
-  }
+  };
 
 })();

@@ -10,7 +10,7 @@
     window.pin.generatePins(OFFERS);
   };
 
-  var onUploadSucces = function (evt) {
+  var onUploadSucces = function () {
     var setDefaultPageDebounce = window.util.setDebounce(window.map.setDefaultPage, DEBOUNCE_PAGE_INTERVAL);
     window.map.setClassName(window.map.successForm, 'hidden', true);
     setDefaultPageDebounce();

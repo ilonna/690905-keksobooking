@@ -60,6 +60,6 @@
     setStatusPins: setStatusPins,
     pinsContainer: pinsContainer,
     PIN_LIMIT: PIN_LIMIT
-  }
+  };
 
 })();

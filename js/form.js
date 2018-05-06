@@ -61,7 +61,6 @@
 
   var changeMinPrice = function () {
     var valueSelectType = selectType.options[selectType.selectedIndex].getAttribute('value');
-    var inputVal = selectPrice.value;
     switch (valueSelectType) {
       case 'flat':
         selectPrice.setAttribute('min', '1000');
@@ -91,7 +90,7 @@
       selectCapacity.options[index].disabled = true;
     });
 
-    var selArray = Array.from(selectCapacityOptions).filter(function (el, index) {
+    var selArray = Array.from(selectCapacityOptions).filter(function (el) {
       if (selectRoomValue === '0' || selectRoomValue === '1') {
         return el.value === selectRoomValue;
       } else if (selectRoomValue === '2') {
@@ -165,12 +164,12 @@
 
   var dragEnter = function (evt) {
     stopDefault(evt);
-    this.style.boxShadow = '0 0 10px 3px #ff5635';
+    evt.target.style.boxShadow = '0 0 10px 3px #ff5635';
   };
 
   function dragLeave(evt) {
     stopDefault(evt);
-    this.style.boxShadow = '';
+    evt.target.style.boxShadow = '';
   }
 
   var drop = function (evt) {
@@ -182,7 +181,7 @@
     } else {
       previewPhoto(files, labelPhotoDrop, photoUploadContainer);
     }
-    this.style.boxShadow = '';
+    elmTarget.style.boxShadow = '';
   };
 
   labelAvatarDrop.addEventListener('dragenter', dragEnter, false);
@@ -196,7 +195,7 @@
   labelPhotoDrop.addEventListener('drop', drop, false);
 
 
-  /*----------------  Validate  ---------------------------------------*/
+  /* ----------------  Validate  --------------------------------------- */
   var showError = function (element, errorMessage) {
     var parentContainer = element.parentNode;
     resetError(element);
@@ -284,6 +283,6 @@
     adForm: adForm,
     arrPhotoFeatures: arrPhotoFeatures,
     avatarFile: avatarFile
-  }
+  };
 
 })();
