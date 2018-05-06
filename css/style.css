@@ -591,7 +591,8 @@ fieldset {
 }
 
 .ad-form-header__drop-zone:focus,
-.ad-form-header__input:focus + .form-header__drop-zone {
+.ad-form-header__input:focus + .form-header__drop-zone,
+.ad-form-header__input:focus + .ad-form-header__drop-zone {
   color: #ff5635;
   -webkit-box-shadow: 0 0 2px 2px #ff6547;
           box-shadow: 0 0 2px 2px #ff6547;
@@ -710,6 +711,10 @@ fieldset {
   background-color: #ff6547;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+}
+.feature__checkbox:checked:focus + .feature {
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset, 0 0 2px 2px #ff6547;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset, 0 0 2px 2px #ff6547;
 }
 
 .feature--wifi {
@@ -1240,5 +1245,20 @@ fieldset {
   color: #ff5635;
   font-size: 10px;
   padding: 3px 5px;
+}
+.popup-error_message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 50px;
+  color: rgb(255, 255, 255);
+  box-shadow: red 0 0 25px;
+  border: 4px solid red;
+  padding: 200px 50px;
+  text-align: center;
+  z-index: 99;
 }
 

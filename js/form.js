@@ -2,29 +2,55 @@
 
 (function () {
 
-
+  var adForm = document.querySelector('.ad-form');
   var selectTimeIn = adForm.querySelector('#timein');
   var selectTimeOut = adForm.querySelector('#timeout');
   var selectType = adForm.querySelector('#type');
   var selectPrice = adForm.querySelector('#price');
   var inputTitle = adForm.querySelector('#title');
-
   var selectRoomNumber = adForm.querySelector('#room_number');
   var selectCapacity = adForm.querySelector('#capacity');
-
-  window.avaUploadContainer = adForm.querySelector('.ad-form-header__upload');
+  var avatarField = adForm.querySelector('#avatar');
+  var imagesField = adForm.querySelector('#images');
+  var avaUploadContainer = adForm.querySelector('.ad-form-header__upload');
   var avaPreviewContainer = avaUploadContainer.querySelector('.ad-form-header__preview');
-  window.labelAvatarDrop = avaUploadContainer.querySelector('.ad-form-header__drop-zone');
+  var labelAvatarDrop = avaUploadContainer.querySelector('.ad-form-header__drop-zone');
   var imgAvatar = avaPreviewContainer.querySelector('img');
-
-  window.photoUploadContainer = adForm.querySelector('.ad-form__photo-container');
+  var photoUploadContainer = adForm.querySelector('.ad-form__photo-container');
   var photoPreviewContainer = photoUploadContainer.querySelector('.ad-form__photo');
-  window.labelPhotoDrop = photoUploadContainer.querySelector('.ad-form__drop-zone');
+  var labelPhotoDrop = photoUploadContainer.querySelector('.ad-form__drop-zone');
 
+  var defaultSrcAva = 'img/muffin-grey.svg';
   var arrPhotoFeatures = [];
+  var avatarFile = 0;
+  var messageDropImg = {
+    error: 'Файл не является изображением',
+    primary: 'Загрузите или&nbsp;перетащите сюда фото'
+  };
 
 
-  /* --- Связь между временем заезда/выезда  ------------------*/
+
+  var setDefaultAva = function () {
+    imgAvatar.src = defaultSrcAva;
+    imgAvatar.style.cssText = '';
+    labelAvatarDrop.innerHTML = messageDropImg.primary;
+    window.map.setClassName(labelAvatarDrop, 'error', true);
+  };
+
+  var setDefaultPhotoList = function () {
+    var firstPhotoBlock = photoUploadContainer.querySelector('.ad-form__photo');
+    var imgBlock = firstPhotoBlock.querySelector('img');
+    var listPhoto = Array.from(photoUploadContainer.querySelectorAll('.ad-form__photo'));
+    if (imgBlock) {
+      firstPhotoBlock.removeChild(imgBlock);
+    }
+    for(var i = 1; i < listPhoto.length; i++) {
+      listPhoto[i].remove();
+    }
+    labelPhotoDrop.innerHTML = messageDropImg.primary;
+    window.map.setClassName(labelPhotoDrop, 'error', true);
+  };
+
   var changeTime = function (select) {
     var indexSelectOption = select.selectedIndex;
     if (select === selectTimeIn) {
@@ -34,8 +60,6 @@
     }
   };
 
-
-  /* --- Связь между типом жилья и ценой  ------------------*/
   var changeMinPrice = function () {
     var valueSelectType = selectType.options[selectType.selectedIndex].getAttribute('value');
     var inputVal = selectPrice.value;
@@ -59,15 +83,14 @@
     }
   };
 
-  /* --- Связь между кол-ом комнат и кол-ом гостей  ------------------*/
   var changeCapacity = function () {
     var selectRoomIndex = selectRoomNumber.selectedIndex;
     var selectRoomValue = selectRoomNumber.options[selectRoomIndex].getAttribute('value');
     var selectCapacityOptions = selectCapacity.options;
 
-    for (var k = 0; k < selectRoomNumber.length; k++) {
-      selectCapacity.options[k].disabled = true;
-    }
+    Array.from(selectRoomNumber).forEach(function (value, index) {
+      selectCapacity.options[index].disabled = true;
+    });
 
     var selArray = Array.from(selectCapacityOptions).filter(function (el, index) {
       if (selectRoomValue === '0' || selectRoomValue === '1') {
@@ -79,37 +102,125 @@
       }
     });
 
-    for (var i = 0; i < selArray.length; i++) {
-      selectCapacity.options[selArray[i].index].disabled = false;
-    }
-
+    selArray.forEach(function (value) {
+      selectCapacity.options[value.index].disabled = false;
+    });
   };
+
+
+  var previewPhoto = function (files, labelDrop, photoContainer) {
+    var photoFile;
+    var photoBlock = photoUploadContainer.querySelector('.ad-form__photo');
+    if (photoBlock.childNodes.length === 0) {
+      photoBlock.remove();
+    }
+    for (var i = 0; i < files.length; i++) {
+      photoFile = files[i];
+      if (/image.*/.test(photoFile.type)) {
+        arrPhotoFeatures.push(photoFile);
+        var photoTemplate = photoPreviewContainer.cloneNode(true);
+        var imgPhoto = document.createElement('img');
+        imgPhoto.src = window.URL.createObjectURL(photoFile);
+        labelDrop.innerHTML = messageDropImg.primary;
+        window.map.setClassName(labelDrop, 'error', true);
+        photoTemplate.appendChild(imgPhoto);
+
+        photoContainer.appendChild(photoTemplate);
+        window.URL.revokeObjectURL(photoFile);
+      } else {
+        labelDrop.innerHTML = messageDropImg.error;
+        window.map.setClassName(labelDrop, 'error', false);
+      }
+    }
+    imagesField.value = '';
+  };
+
+
+  var previewAvatar = function (files, labelDrop, fromDrop) {
+    var avaFile = files[0];
+    if (files.length === 0) {
+      setDefaultAva();
+    } else {
+      if (/image.*/.test(avaFile.type)) {
+        if (fromDrop) {
+          window.avatarFile = avaFile;
+        }
+        imgAvatar.src = window.URL.createObjectURL(avaFile);
+        imgAvatar.style.cssText = 'width: auto; height: auto; margin: 0;';
+        labelDrop.innerHTML = messageDropImg.primary;
+        window.map.setClassName(labelDrop, 'error', true);
+        window.URL.revokeObjectURL(avaFile);
+      } else {
+        setDefaultAva();
+        labelDrop.innerHTML = messageDropImg.error;
+        window.map.setClassName(labelDrop, 'error', false);
+      }
+    }
+  };
+
+
+  var stopDefault = function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  };
+
+  var dragEnter = function (evt) {
+    stopDefault(evt);
+    this.style.boxShadow = '0 0 10px 3px #ff5635';
+  };
+
+  function dragLeave(evt) {
+    stopDefault(evt);
+    this.style.boxShadow = '';
+  }
+
+  var drop = function (evt) {
+    stopDefault(evt);
+    var elmTarget = evt.target;
+    var files = evt.dataTransfer.files;
+    if (elmTarget === labelAvatarDrop) {
+      previewAvatar(files, labelAvatarDrop, true);
+    } else {
+      previewPhoto(files, labelPhotoDrop, photoUploadContainer);
+    }
+    this.style.boxShadow = '';
+  };
+
+  labelAvatarDrop.addEventListener('dragenter', dragEnter, false);
+  labelAvatarDrop.addEventListener('dragover', dragEnter, false);
+  labelAvatarDrop.addEventListener('dragleave', dragLeave, false);
+  labelAvatarDrop.addEventListener('drop', drop, false);
+
+  labelPhotoDrop.addEventListener('dragenter', dragEnter, false);
+  labelPhotoDrop.addEventListener('dragover', dragEnter, false);
+  labelPhotoDrop.addEventListener('dragleave', dragLeave, false);
+  labelPhotoDrop.addEventListener('drop', drop, false);
+
 
 
   /*----------------  Validate  ---------------------------------------*/
   var showError = function (element, errorMessage) {
-    var container = element.parentNode;
+    var parentContainer = element.parentNode;
     resetError(element);
     var msgElement = document.createElement('div');
     msgElement.className = 'error-message';
     msgElement.innerHTML = errorMessage;
     element.setCustomValidity(errorMessage);
     element.classList.add('error');
-    container.appendChild(msgElement);
-
+    parentContainer.appendChild(msgElement);
   };
 
   var resetError = function (element) {
-    var container = element.parentNode;
-    if (container.lastChild.className === 'error-message') {
-      container.removeChild(container.lastChild);
+    var parentContainer = element.parentNode;
+    if (parentContainer.lastChild.className === 'error-message') {
+      parentContainer.removeChild(parentContainer.lastChild);
       element.setCustomValidity('');
       element.classList.remove('error');
     }
   };
 
 
-  window.validateForm = function (evt) {
+  var validate = function (evt) {
     var element = evt.target;
 
     if (element === inputTitle) {
@@ -156,94 +267,25 @@
       changeTime(element);
     }
 
+    if (element === avatarField) {
+      var avaFile = element.files;
+      previewAvatar(avaFile, labelAvatarDrop);
+    }
+
+    if (element === imagesField) {
+      var imgFile = element.files;
+      previewPhoto(imgFile, labelPhotoDrop, photoUploadContainer);
+    }
+
   };
 
-
-  /*--------- Загрузка/предпоказ изображений (В ПРОЦЕССЕ) --------------------*/
-  window.previewPhoto = function (files, labelDrop, photoContainer) {
-    var photoFile;
-    for (var i = 0; i < files.length; i++) {
-      photoFile = files[i];
-      if (/image.*/.test(photoFile.type)) {
-        arrPhotoFeatures.push(photoFile);
-        var photoTemplate = photoPreviewContainer.cloneNode(true);
-        var imgPhoto = document.createElement('img');
-        imgPhoto.src = window.URL.createObjectURL(photoFile);
-        labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
-        setClassName(labelDrop, 'error', true);
-        photoTemplate.appendChild(imgPhoto);
-        if (photoPreviewContainer.childNodes.length === 0) {
-          photoPreviewContainer.remove();
-        }
-        photoContainer.appendChild(photoTemplate);
-        window.URL.revokeObjectURL(photoFile);
-      } else {
-        labelDrop.innerHTML = 'Файл не является изображением';
-        setClassName(labelDrop, 'error', false);
-
-      }
-    }
-  };
-
-
-  window.previewAvatar = function (files, labelDrop) {
-    var avaFile = files[0];
-    if (files.length === 0) {
-      labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
-      imgAvatar.src = 'img/muffin-grey.svg';
-      imgAvatar.style.cssText = '';
-    } else {
-      if (/image.*/.test(avaFile.type)) {
-        imgAvatar.src = window.URL.createObjectURL(avaFile);
-        imgAvatar.style.cssText = 'width: auto; height: auto; margin: 0;';
-        labelDrop.innerHTML = 'Загрузите или&nbsp;перетащите сюда фото';
-        setClassName(labelDrop, 'error', true);
-        window.URL.revokeObjectURL(avaFile);
-      } else {
-        labelDrop.innerHTML = 'Файл не является изображением';
-        setClassName(labelDrop, 'error', false);
-        imgAvatar.src = 'img/muffin-grey.svg';
-        imgAvatar.style.cssText = '';
-      }
-    }
-  };
-
-
-  function stopDefault(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
+  window.form = {
+    setDefaultAva: setDefaultAva,
+    setDefaultPhotoList: setDefaultPhotoList,
+    validate: validate,
+    adForm: adForm,
+    arrPhotoFeatures: arrPhotoFeatures,
+    avatarFile: avatarFile
   }
-
-  function dragEnter(evt) {
-    stopDefault(evt);
-    this.style.boxShadow = '0 0 10px 3px #ff5635';
-  }
-
-  function dragLeave(evt) {
-    stopDefault(evt);
-    this.style.boxShadow = '';
-  }
-
-  function drop(evt) {
-    stopDefault(evt);
-    var elmTarget = evt.target;
-    var files = evt.dataTransfer.files;
-    if (elmTarget === labelAvatarDrop) {
-      previewAvatar(files, labelAvatarDrop);
-    } else {
-      previewPhoto(files, labelPhotoDrop, photoUploadContainer);
-    }
-    this.style.boxShadow = '';
-  }
-
-  labelAvatarDrop.addEventListener('dragenter', dragEnter, false);
-  labelAvatarDrop.addEventListener('dragover', dragEnter, false);
-  labelAvatarDrop.addEventListener('dragleave', dragLeave, false);
-  labelAvatarDrop.addEventListener('drop', drop, false);
-
-  labelPhotoDrop.addEventListener('dragenter', dragEnter, false);
-  labelPhotoDrop.addEventListener('dragover', dragEnter, false);
-  labelPhotoDrop.addEventListener('dragleave', dragLeave, false);
-  labelPhotoDrop.addEventListener('drop', drop, false);
 
 })();
