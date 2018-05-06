@@ -5,6 +5,8 @@
   var PIN_DEFAULT_TOP = 375;
   var PIN_DEFAULT_LEFT = 570;
   var ENTER_KEYCODE = 13;
+  var LIMIT_PIN_TOP = 150;
+  var LIMIT_PIN_BOTTOM = 500;
 
   var pinMainElement = window.pin.pinsContainer.querySelector('.map__pin--main');
   var imgPinElement = pinMainElement.querySelector('img');
@@ -84,9 +86,9 @@
     evt.preventDefault();
 
     var limitCoords = {
-      top: window.pin.pinsContainer.offsetTop,
+      top: LIMIT_PIN_TOP,
       right: window.pin.pinsContainer.offsetWidth - pinMainElement.offsetWidth,
-      bottom: window.pin.pinsContainer.offsetHeight - imgPinElement.offsetHeight - parseInt(getComputedStyle(pinMainElement, '::after').height, 10),
+      bottom: LIMIT_PIN_BOTTOM,
       left: window.pin.pinsContainer.offsetLeft
     };
 
