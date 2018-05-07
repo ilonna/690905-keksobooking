@@ -2,14 +2,14 @@
 
 (function () {
 
-  var TEMPLATE = document.querySelector('template');
-  var container = document.querySelector('.map');
-  var CARD_TEMPLATE = TEMPLATE.content.querySelector('.map__card');
-  var cardContainer = CARD_TEMPLATE.cloneNode(true);
+  var templateLayout = document.querySelector('template');
+  var mapContainer = document.querySelector('.map');
+  var cardTemplate = templateLayout.content.querySelector('.map__card');
+  var cardContainer = cardTemplate.cloneNode(true);
   var featuresContainer = cardContainer.querySelector('.popup__features');
   var photoFeaturesContainer = cardContainer.querySelector('.popup__photos');
-  var photoFeatures = photoFeaturesContainer.querySelector('img');
-  photoFeaturesContainer.removeChild(photoFeatures);
+  var imgFeatures = photoFeaturesContainer.querySelector('img');
+  photoFeaturesContainer.removeChild(imgFeatures);
 
   var offerTypes = {
     palace: 'Дворец',
@@ -21,9 +21,9 @@
   var getPhotoOffers = function (offer) {
     photoFeaturesContainer.innerHTML = '';
     offer.offer.photos.forEach(function (element) {
-      var imgElement = photoFeatures.cloneNode(true);
-      imgElement.src = element;
-      photoFeaturesContainer.appendChild(imgElement);
+      var imgOffer = imgFeatures.cloneNode(true);
+      imgOffer.src = element;
+      photoFeaturesContainer.appendChild(imgOffer);
     });
   };
 
@@ -36,7 +36,7 @@
     });
   };
 
-  var removeCard = function () {
+  var onRemoveClick = function () {
     cardContainer.remove();
   };
 
@@ -51,15 +51,15 @@
     cardContainer.querySelector('.popup__avatar').src = offer.author.avatar;
     getFeatures(offer.offer.features);
     getPhotoOffers(offer);
-    container.insertBefore(cardContainer, container.lastElementChild);
+    mapContainer.insertBefore(cardContainer, mapContainer.lastElementChild);
   };
 
   window.card = {
-    generateCard: generateCard,
-    removeCard: removeCard,
-    TEMPLATE: TEMPLATE,
-    container: container,
-    cardContainer: cardContainer
+    generate: generateCard,
+    onRemoveClick: onRemoveClick,
+    templateLayout: templateLayout,
+    mapContainer: mapContainer,
+    container: cardContainer
   };
 
 })();
