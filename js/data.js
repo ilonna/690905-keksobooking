@@ -24,8 +24,8 @@
     if (window.form.avatarFile !== 0) {
       formData.append('avatar', window.form.avatarFile[0]);
     }
-    if (window.form.arrPhotoFeatures.length !== 0) {
-      window.form.arrPhotoFeatures.forEach(function (file) {
+    if (window.form.featureImages.length !== 0) {
+      window.form.featureImages.forEach(function (file) {
         formData.append('images[]', file);
       });
     }
