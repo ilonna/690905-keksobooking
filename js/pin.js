@@ -5,21 +5,21 @@
   var DOT_PIN_X = 25;
   var DOT_PIN_Y = 70;
   var ESC_KEYCODE = 27;
-  var PIN_LIMIT = 5;
-  var PIN_TEMPLATE = window.card.TEMPLATE.content.querySelector('.map__pin');
-  var buttonClosePopup = window.card.cardContainer.querySelector('.popup__close');
-  var pinsContainer = window.card.container.querySelector('.map__pins');
+  var LIMIT_GENERATE = 5;
+  var pinTemplate = window.card.templateLayout.content.querySelector('.map__pin');
+  var closePopup = window.card.container.querySelector('.popup__close');
+  var mapPinsContainer = window.card.mapContainer.querySelector('.map__pins');
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      window.card.removeCard();
+      window.card.container.remove();
     }
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var setStatusPins = function (show, remove) {
-    var pinArray = Array.from(pinsContainer.querySelectorAll('.map__pin'));
-    pinArray.forEach(function (item) {
+    var pinsArray = Array.from(mapPinsContainer.querySelectorAll('.map__pin'));
+    pinsArray.forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         if (show === true) {
           item.classList.remove('hidden');
@@ -33,33 +33,33 @@
   };
 
   var createPin = function (offer) {
-    var pinElement = PIN_TEMPLATE.cloneNode(true);
-    var pinElementImg = pinElement.querySelector('img');
-    pinElement.setAttribute('style', 'left:' + (offer.location.x - DOT_PIN_X) + 'px; top: ' + (offer.location.y - DOT_PIN_Y) + 'px;');
-    pinElement.classList.add('hidden');
-    pinElementImg.src = offer.author.avatar;
-    pinElementImg.alt = offer.offer.title;
-    pinsContainer.appendChild(pinElement);
-    pinElement.addEventListener('click', function () {
-      window.card.generateCard(offer);
-      buttonClosePopup.addEventListener('click', window.card.removeCard);
+    var pin = pinTemplate.cloneNode(true);
+    var imgPin = pin.querySelector('img');
+    pin.setAttribute('style', 'left:' + (offer.location.x - DOT_PIN_X) + 'px; top: ' + (offer.location.y - DOT_PIN_Y) + 'px;');
+    pin.classList.add('hidden');
+    imgPin.src = offer.author.avatar;
+    imgPin.alt = offer.offer.title;
+    mapPinsContainer.appendChild(pin);
+    pin.addEventListener('click', function () {
+      window.card.generate(offer);
+      closePopup.addEventListener('click', window.card.onRemoveClick);
       document.addEventListener('keydown', onPopupEscPress);
     });
   };
 
   var generatePins = function (data) {
-    var limitOffers = data.slice(0, PIN_LIMIT);
-    limitOffers.forEach(function (offer) {
+    var offersLimit = data.slice(0, LIMIT_GENERATE);
+    offersLimit.forEach(function (offer) {
       createPin(offer);
     });
   };
 
   window.pin = {
-    createPin: createPin,
-    generatePins: generatePins,
-    setStatusPins: setStatusPins,
-    pinsContainer: pinsContainer,
-    PIN_LIMIT: PIN_LIMIT
+    create: createPin,
+    generate: generatePins,
+    setStatus: setStatusPins,
+    container: mapPinsContainer,
+    LIMIT_GENERATE: LIMIT_GENERATE
   };
 
 })();

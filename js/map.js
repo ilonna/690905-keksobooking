@@ -8,16 +8,16 @@
   var LIMIT_PIN_TOP = 150;
   var LIMIT_PIN_BOTTOM = 500;
 
-  var pinMainElement = window.pin.pinsContainer.querySelector('.map__pin--main');
-  var imgPinElement = pinMainElement.querySelector('img');
-  var inputAddress = window.form.adForm.querySelector('#address');
-  var fieldsetElements = window.form.adForm.querySelectorAll('fieldset');
+  var pinMain = window.pin.container.querySelector('.map__pin--main');
+  var imgPinMain = pinMain.querySelector('img');
+  var addressField = window.form.adForm.querySelector('#address');
+  var fieldSets = window.form.adForm.querySelectorAll('fieldset');
   var resetButton = window.form.adForm.querySelector('.ad-form__reset');
   var sendButton = window.form.adForm.querySelector('.ad-form__submit');
-  var featureCheckbox = Array.from(window.form.adForm.querySelectorAll('.features input'));
-  var successForm = document.querySelector('.success');
+  var featureFieldSets = Array.from(window.form.adForm.querySelectorAll('.features input'));
+  var successPopup = document.querySelector('.success');
 
-  var setAttributeFormElements = function (selector, status) {
+  var setAttributeElementsForm = function (selector, status) {
     selector.forEach(function (element) {
       if (status) {
         element.removeAttribute('disabled', true);
@@ -29,26 +29,26 @@
 
   var setCoordDotMap = function (endX, endY) {
     var dot = {
-      top: endY + (imgPinElement.offsetHeight + parseInt(getComputedStyle(pinMainElement, '::after').height, 10)),
-      left: endX + Math.round(parseInt(getComputedStyle(pinMainElement).width, 10) / 2)
+      top: endY + (imgPinMain.offsetHeight + parseInt(getComputedStyle(pinMain, '::after').height, 10)),
+      left: endX + Math.round(parseInt(getComputedStyle(pinMain).width, 10) / 2)
     };
-    inputAddress.setAttribute('value', dot.left + ', ' + dot.top);
+    addressField.setAttribute('value', dot.left + ', ' + dot.top);
   };
 
   var setStatusPage = function (status) {
-    window.pin.setStatusPins(status, null);
-    setClassName(window.card.container, 'map--faded', status);
+    window.pin.setStatus(status, null);
+    setClassName(window.card.mapContainer, 'map--faded', status);
     setClassName(window.form.adForm, 'ad-form--disabled', status);
-    setAttributeFormElements(fieldsetElements, status);
+    setAttributeElementsForm(fieldSets, status);
   };
 
   var activatePage = function () {
     setStatusPage(true);
-    setCoordDotMap(parseInt(getComputedStyle(pinMainElement).left, 10), parseInt(getComputedStyle(pinMainElement).top, 10));
-    resetButton.addEventListener('click', setDefaultPage);
+    setCoordDotMap(parseInt(getComputedStyle(pinMain).left, 10), parseInt(getComputedStyle(pinMain).top, 10));
+    resetButton.addEventListener('click', onSetDefaultPage);
     window.util.addFocusListener(window.filter.featureFilter);
-    window.util.addFocusListener(featureCheckbox);
-    window.form.adForm.addEventListener('change', window.form.validate);
+    window.util.addFocusListener(featureFieldSets);
+    window.form.adForm.addEventListener('change', window.form.onElementChange);
   };
 
 
@@ -56,7 +56,7 @@
     if (evt.keyCode === ENTER_KEYCODE) {
       activatePage();
     }
-    pinMainElement.removeEventListener('keydown', onPinEnterPress);
+    pinMain.removeEventListener('keydown', onPinEnterPress);
   };
 
   var setClassName = function (selector, className, status) {
@@ -67,29 +67,27 @@
     }
   };
 
-  var setDefaultPage = function () {
+  var onSetDefaultPage = function () {
     setStatusPage(false);
-    window.form.adForm.reset();
-    window.card.removeCard();
-    pinMainElement.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
+    window.form.setReset();
+    window.card.container.remove();
+    pinMain.setAttribute('style', 'left: ' + PIN_DEFAULT_LEFT + 'px; top: ' + PIN_DEFAULT_TOP + 'px;');
     sendButton.innerText = 'Опубликовать';
     sendButton.removeAttribute('disabled', true);
-    setClassName(successForm, 'hidden', false);
-    window.form.setDefaultAva();
-    window.form.setDefaultPhotoList();
-    pinMainElement.addEventListener('keydown', onPinEnterPress);
+    setClassName(successPopup, 'hidden', false);
+    pinMain.addEventListener('keydown', onPinEnterPress);
   };
 
 
   /* ------- drag&drop -----------------------*/
-  pinMainElement.addEventListener('mousedown', function (evt) {
+  pinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var limitCoords = {
       top: LIMIT_PIN_TOP,
-      right: window.pin.pinsContainer.offsetWidth - pinMainElement.offsetWidth,
+      right: window.pin.container.offsetWidth - pinMain.offsetWidth,
       bottom: LIMIT_PIN_BOTTOM,
-      left: window.pin.pinsContainer.offsetLeft
+      left: window.pin.container.offsetLeft
     };
 
     var startCoords = {
@@ -107,7 +105,7 @@
     var onMouseLeave = function (leaveEvt) {
       leaveEvt.preventDefault();
       onMouseUp(leaveEvt);
-      window.pin.pinsContainer.removeEventListener('mouseleave', onMouseLeave);
+      window.pin.container.removeEventListener('mouseleave', onMouseLeave);
     };
 
     var onMouseMove = function (moveEvt) {
@@ -124,8 +122,8 @@
       };
 
       var endCoords = {
-        x: pinMainElement.offsetLeft - shift.x,
-        y: pinMainElement.offsetTop - shift.y
+        x: pinMain.offsetLeft - shift.x,
+        y: pinMain.offsetTop - shift.y
       };
 
       if (endCoords.x > limitCoords.right) {
@@ -141,12 +139,12 @@
         endCoords.y = limitCoords.top;
       }
 
-      pinMainElement.style.left = endCoords.x + 'px';
-      pinMainElement.style.top = endCoords.y + 'px';
+      pinMain.style.left = endCoords.x + 'px';
+      pinMain.style.top = endCoords.y + 'px';
 
       setCoordDotMap(endCoords.x, endCoords.y);
       activatePage();
-      window.pin.pinsContainer.addEventListener('mouseleave', onMouseLeave);
+      window.pin.container.addEventListener('mouseleave', onMouseLeave);
     };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
@@ -154,9 +152,9 @@
 
   window.map = {
     setClassName: setClassName,
-    setDefaultPage: setDefaultPage,
+    setDefaultPage: onSetDefaultPage,
     sendButton: sendButton,
-    successForm: successForm,
+    successPopup: successPopup,
     ENTER_KEYCODE: ENTER_KEYCODE
   };
 })();

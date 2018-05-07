@@ -7,12 +7,12 @@
 
   var onDownloadSuccess = function (data) {
     OFFERS.push.apply(OFFERS, data);
-    window.pin.generatePins(OFFERS);
+    window.pin.generate(OFFERS);
   };
 
   var onUploadSucces = function () {
     var setDefaultPageDebounce = window.util.setDebounce(window.map.setDefaultPage, DEBOUNCE_PAGE_INTERVAL);
-    window.map.setClassName(window.map.successForm, 'hidden', true);
+    window.map.setClassName(window.map.successPopup, 'hidden', true);
     setDefaultPageDebounce();
   };
 
@@ -22,7 +22,7 @@
     evt.preventDefault();
     var formData = new FormData(window.form.adForm);
     if (window.form.avatarFile !== 0) {
-      formData.append('avatar', window.form.avatarFile);
+      formData.append('avatar', window.form.avatarFile[0]);
     }
     if (window.form.arrPhotoFeatures.length !== 0) {
       window.form.arrPhotoFeatures.forEach(function (file) {

@@ -845,7 +845,10 @@ fieldset {
   -ms-flex-align: center;
   align-items: center;
 }
-
+.ad-form__photo.drag-over {
+  -webkit-box-shadow: 0 0 2px 2px #ff6547;
+  box-shadow: 0 0 2px 2px #ff6547;
+}
 .ad-form__element--submit {
   -ms-flex-preferred-size: 100%;
       flex-basis: 100%;
