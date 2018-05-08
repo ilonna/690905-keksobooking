@@ -83,7 +83,6 @@
   };
 
 
-  /* ------- drag&drop -----------------------*/
   pinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
