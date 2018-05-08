@@ -51,7 +51,7 @@
 
   var compareFiltredOffers = function () {
     var createFiltredOffersDebounced = window.util.setDebounce(createFiltredOffers, DEBOUNCE_FILTER_INTERVAL);
-    var newOffers = window.data.OFFERS.filter(function (item) {
+    var newOffers = window.data.adsList.filter(function (item) {
       return (((filterOffer.type === 'any') || (item.offer.type === filterOffer.type)) &&
         ((filterOffer.price === 'any') || filterPrise(filterOffer.price, item)) &&
         ((filterOffer.rooms === 'any') || (item.offer.rooms === parseInt(filterOffer.rooms, 10))) &&

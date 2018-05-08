@@ -2,12 +2,12 @@
 
 (function () {
 
-  var OFFERS = [];
   var DEBOUNCE_PAGE_INTERVAL = 3000;
+  var adsList = [];
 
   var onDownloadSuccess = function (data) {
-    OFFERS.push.apply(OFFERS, data);
-    window.pin.generate(OFFERS);
+    adsList.push.apply(adsList, data);
+    window.pin.generate(adsList);
   };
 
   var onUploadSucces = function () {
@@ -33,7 +33,7 @@
   });
 
   window.data = {
-    OFFERS: OFFERS
+    adsList: adsList
   };
 
 })();

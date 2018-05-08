@@ -67,7 +67,7 @@
     }
   };
 
-  var onSetDefaultPage = function () {
+  var setDefaultPage = function () {
     setStatusPage(false);
     window.form.setReset();
     window.card.container.remove();
@@ -76,6 +76,10 @@
     sendButton.removeAttribute('disabled', true);
     setClassName(successPopup, 'hidden', false);
     pinMain.addEventListener('keydown', onPinEnterPress);
+  };
+
+  var onSetDefaultPage = function () {
+    setDefaultPage();
   };
 
 
@@ -152,7 +156,7 @@
 
   window.map = {
     setClassName: setClassName,
-    setDefaultPage: onSetDefaultPage,
+    setDefaultPage: setDefaultPage,
     sendButton: sendButton,
     successPopup: successPopup,
     ENTER_KEYCODE: ENTER_KEYCODE
