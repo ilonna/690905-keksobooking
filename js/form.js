@@ -126,7 +126,7 @@
     window.map.setClassName(labelDrop, 'error', false);
   };
 
-  var createImage = function (file, labelDrop, photoContainer) {
+  var createImage = function (file, labelDrop, photoContainer, index) {
     var photoBlock = photoUploadContainer.querySelector('.ad-form__photo');
     if (/image.*/.test(file.type)) {
       var photoTemplate = photoPreviewContainer.cloneNode(true);
@@ -139,7 +139,7 @@
       labelDrop.innerHTML = messageAreaDrop.primary;
       window.map.setClassName(labelDrop, 'error', true);
       photoTemplate.appendChild(imgPhoto);
-      photoTemplate.setAttribute('id', 'block-image-' + i);
+      photoTemplate.setAttribute('id', 'block-image-' + index);
       photoContainer.appendChild(photoTemplate);
       window.URL.revokeObjectURL(file);
       photoTemplate.addEventListener('dragstart', onImageDragStart, false);
@@ -153,7 +153,7 @@
 
   var previewPhoto = function (files, labelDrop, photoContainer) {
     for (var i = 0; i < files.length; i++) {
-      createImage(files[i], labelDrop, photoContainer);
+      createImage(files[i], labelDrop, photoContainer, i);
     }
     imagesField.value = '';
   };
